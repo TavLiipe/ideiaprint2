@@ -101,20 +101,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
   const fetchHistory = async () => {
     try {
       const { data } = await supabase
-        .from('order_history')
-        .select(`
-          *,
-          changer:changed_by (email)
-        `)
+        .from('order_history_with_changer')
+        .select('*')
         .eq('order_id', order.id)
         .order('changed_at', { ascending: false });
 
-      const formattedData = data?.map(entry => ({
-        ...entry,
-        changer_email: entry.changer?.email || 'Desconhecido'
-      })) || [];
-
-      setHistory(formattedData);
+      setHistory(data || []);
     } catch (error) {
       console.error('Error fetching history:', error);
     }

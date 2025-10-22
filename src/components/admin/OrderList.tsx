@@ -69,19 +69,11 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
   const fetchOrders = async () => {
     try {
       const { data } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          creator:created_by (email)
-        `)
+        .from('orders_with_creator')
+        .select('*')
         .order('created_at', { ascending: false });
 
-      const formattedData = data?.map(order => ({
-        ...order,
-        creator_email: order.creator?.email || 'Desconhecido'
-      })) || [];
-
-      setOrders(formattedData);
+      setOrders(data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
