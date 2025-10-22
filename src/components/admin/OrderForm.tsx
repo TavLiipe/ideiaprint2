@@ -81,6 +81,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
         .insert([{
           ...formData,
           employee_id: user.id,
+          created_by: user.id,
           status: 'em_producao'
         }]);
 

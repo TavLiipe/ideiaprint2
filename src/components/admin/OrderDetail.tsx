@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useDropzone } from 'react-dropzone';
-import { 
-  X, 
-  User, 
-  Mail, 
-  Phone, 
-  Building, 
-  Package, 
-  Calendar, 
+import {
+  X,
+  User,
+  Mail,
+  Phone,
+  Building,
+  Package,
+  Calendar,
   Clock,
   Upload,
   File,
@@ -18,7 +18,8 @@ import {
   Edit,
   Save,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  History
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -50,6 +51,16 @@ interface OrderFile {
   created_at: string;
 }
 
+interface OrderHistory {
+  id: string;
+  order_id: string;
+  changed_by: string;
+  field_name: string;
+  old_value: string;
+  new_value: string;
+  changed_at: string;
+}
+
 interface OrderDetailProps {
   order: Order;
   onClose: () => void;
@@ -59,6 +70,7 @@ interface OrderDetailProps {
 const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) => {
   const [editing, setEditing] = useState(false);
   const [files, setFiles] = useState<OrderFile[]>([]);
+  const [history, setHistory] = useState<OrderHistory[]>([]);
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const [formData, setFormData] = useState({
     status: order.status,
@@ -68,6 +80,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
   useEffect(() => {
     fetchFiles();
+    fetchHistory();
   }, [order.id]);
 
   const fetchFiles = async () => {
@@ -81,6 +94,20 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
       setFiles(data || []);
     } catch (error) {
       console.error('Error fetching files:', error);
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      const { data } = await supabase
+        .from('order_history')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('changed_at', { ascending: false });
+
+      setHistory(data || []);
+    } catch (error) {
+      console.error('Error fetching history:', error);
     }
   };
 
@@ -131,17 +158,61 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
   const handleUpdate = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) throw new Error('User not authenticated');
+
+      const changes = [];
+
+      if (formData.status !== order.status) {
+        changes.push({
+          order_id: order.id,
+          changed_by: user.id,
+          field_name: 'status',
+          old_value: getStatusText(order.status),
+          new_value: getStatusText(formData.status)
+        });
+      }
+
+      if (formData.description !== (order.description || '')) {
+        changes.push({
+          order_id: order.id,
+          changed_by: user.id,
+          field_name: 'description',
+          old_value: order.description || 'Nenhuma descrição',
+          new_value: formData.description || 'Nenhuma descrição'
+        });
+      }
+
+      if (formData.delivery_date !== order.delivery_date) {
+        changes.push({
+          order_id: order.id,
+          changed_by: user.id,
+          field_name: 'delivery_date',
+          old_value: format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR }),
+          new_value: format(new Date(formData.delivery_date), 'dd/MM/yyyy', { locale: ptBR })
+        });
+      }
+
       const { error } = await supabase
         .from('orders')
         .update({
           status: formData.status,
           description: formData.description,
-          delivery_date: formData.delivery_date
+          delivery_date: formData.delivery_date,
+          updated_at: new Date().toISOString()
         })
         .eq('id', order.id);
 
       if (error) throw error;
 
+      if (changes.length > 0) {
+        await supabase
+          .from('order_history')
+          .insert(changes);
+      }
+
+      await fetchHistory();
       setEditing(false);
       onUpdate();
     } catch (error) {
@@ -426,6 +497,40 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
               </div>
             )}
           </div>
+
+          {/* History Section */}
+          {history.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <History className="w-5 h-5 mr-2 text-orange-500" />
+                Histórico de Alterações
+              </h3>
+              <div className="space-y-3">
+                {history.map((entry) => (
+                  <div key={entry.id} className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                    <Clock className="w-4 h-4 text-gray-400 mt-0.5" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {entry.field_name === 'status' && 'Status alterado'}
+                          {entry.field_name === 'description' && 'Descrição alterada'}
+                          {entry.field_name === 'delivery_date' && 'Data de entrega alterada'}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {format(new Date(entry.changed_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                        </p>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        <span className="text-red-600 line-through">{entry.old_value}</span>
+                        {' → '}
+                        <span className="text-green-600 font-medium">{entry.new_value}</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Actions */}
           {editing && (

@@ -60,6 +60,46 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
     }
   };
 
+  const handleStatusChange = async (orderId: string, currentStatus: string) => {
+    const statusFlow: Record<string, string> = {
+      'em_producao': 'finalizado',
+      'finalizado': 'cancelado',
+      'cancelado': 'em_producao'
+    };
+
+    const newStatus = statusFlow[currentStatus];
+
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        await supabase
+          .from('order_history')
+          .insert({
+            order_id: orderId,
+            changed_by: user.id,
+            field_name: 'status',
+            old_value: getStatusText(currentStatus),
+            new_value: getStatusText(newStatus)
+          });
+      }
+
+      fetchOrders();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
   const filterOrders = () => {
     let filtered = orders;
 
@@ -223,10 +263,14 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                      <button
+                        onClick={() => handleStatusChange(order.id, order.status)}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer ${getStatusColor(order.status)}`}
+                        title="Clique para alterar o status"
+                      >
                         {getStatusIcon(order.status)}
                         <span className="ml-1">{getStatusText(order.status)}</span>
-                      </span>
+                      </button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}
