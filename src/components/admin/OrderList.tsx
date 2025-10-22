@@ -26,6 +26,8 @@ interface Order {
   created_at: string;
   updated_at: string;
   employee_id: string;
+  created_by?: string;
+  creator_email?: string;
 }
 
 interface OrderListProps {
@@ -38,6 +40,7 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -47,27 +50,52 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
     filterOrders();
   }, [orders, searchTerm, statusFilter]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (statusMenuOpen) {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.status-menu-container')) {
+          setStatusMenuOpen(null);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [statusMenuOpen]);
+
   const fetchOrders = async () => {
     try {
       const { data } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          creator:created_by (email)
+        `)
         .order('created_at', { ascending: false });
 
-      setOrders(data || []);
+      const formattedData = data?.map(order => ({
+        ...order,
+        creator_email: order.creator?.email || 'Desconhecido'
+      })) || [];
+
+      setOrders(formattedData);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
 
-  const handleStatusChange = async (orderId: string, currentStatus: string) => {
-    const statusFlow: Record<string, string> = {
-      'em_producao': 'finalizado',
-      'finalizado': 'cancelado',
-      'cancelado': 'em_producao'
-    };
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
 
-    const newStatus = statusFlow[currentStatus];
+    const currentStatus = order.status;
+    if (currentStatus === newStatus) {
+      setStatusMenuOpen(null);
+      return;
+    }
 
     try {
       const { error } = await supabase
@@ -94,6 +122,7 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
           });
       }
 
+      setStatusMenuOpen(null);
       fetchOrders();
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -232,6 +261,9 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                     Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Criado por
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Entrega
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -263,14 +295,44 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={() => handleStatusChange(order.id, order.status)}
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer ${getStatusColor(order.status)}`}
-                        title="Clique para alterar o status"
-                      >
-                        {getStatusIcon(order.status)}
-                        <span className="ml-1">{getStatusText(order.status)}</span>
-                      </button>
+                      <div className="relative status-menu-container">
+                        <button
+                          onClick={() => setStatusMenuOpen(statusMenuOpen === order.id ? null : order.id)}
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer ${getStatusColor(order.status)}`}
+                          title="Clique para alterar o status"
+                        >
+                          {getStatusIcon(order.status)}
+                          <span className="ml-1">{getStatusText(order.status)}</span>
+                        </button>
+                        {statusMenuOpen === order.id && (
+                          <div className="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
+                            <button
+                              onClick={() => handleStatusChange(order.id, 'em_producao')}
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                            >
+                              <Clock className="w-4 h-4 text-yellow-600" />
+                              <span>Em Produção</span>
+                            </button>
+                            <button
+                              onClick={() => handleStatusChange(order.id, 'finalizado')}
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                            >
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <span>Finalizado</span>
+                            </button>
+                            <button
+                              onClick={() => handleStatusChange(order.id, 'cancelado')}
+                              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                            >
+                              <XCircle className="w-4 h-4 text-red-600" />
+                              <span>Cancelado</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {order.creator_email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}

@@ -59,6 +59,7 @@ interface OrderHistory {
   old_value: string;
   new_value: string;
   changed_at: string;
+  changer_email?: string;
 }
 
 interface OrderDetailProps {
@@ -101,11 +102,19 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
     try {
       const { data } = await supabase
         .from('order_history')
-        .select('*')
+        .select(`
+          *,
+          changer:changed_by (email)
+        `)
         .eq('order_id', order.id)
         .order('changed_at', { ascending: false });
 
-      setHistory(data || []);
+      const formattedData = data?.map(entry => ({
+        ...entry,
+        changer_email: entry.changer?.email || 'Desconhecido'
+      })) || [];
+
+      setHistory(formattedData);
     } catch (error) {
       console.error('Error fetching history:', error);
     }
@@ -520,10 +529,13 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
                           {format(new Date(entry.changed_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                         </p>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 mb-1">
                         <span className="text-red-600 line-through">{entry.old_value}</span>
                         {' → '}
                         <span className="text-green-600 font-medium">{entry.new_value}</span>
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Alterado por: {entry.changer_email}
                       </p>
                     </div>
                   </div>
