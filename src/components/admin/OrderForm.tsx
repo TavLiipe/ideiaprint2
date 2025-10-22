@@ -76,18 +76,6 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
     }
 
     try {
-      // Verificar se o usuário existe na tabela de funcionários
-      const { data: employee, error: employeeError } = await supabase
-        .from('employees')
-        .select('id')
-        .eq('id', user.id)
-        .single();
-
-      if (employeeError || !employee) {
-        setError('Erro: Sua conta não está associada a um perfil de funcionário. Entre em contato com o administrador.');
-        return;
-      }
-
       const { error: insertError } = await supabase
         .from('orders')
         .insert([{
