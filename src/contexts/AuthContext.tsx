@@ -93,34 +93,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (username: string, password: string) => {
     try {
-      const { data: userRoleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('user_id, password_hash')
-        .eq('username', username)
-        .eq('is_active', true)
-        .maybeSingle();
+      // Verificar credenciais usando a função do banco de dados
+      const { data: authResult, error: authError } = await supabase.rpc('authenticate_user', {
+        p_username: username,
+        p_password: password
+      });
 
-      if (roleError || !userRoleData) {
+      if (authError || !authResult) {
         return { error: { message: 'Usuário ou senha inválidos' } };
       }
 
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userRoleData.user_id);
+      // Se user_id está disponível, fazer login no Supabase Auth
+      if (authResult.user_id) {
+        const { data: userData, error: userError } = await supabase.auth.admin.getUserById(authResult.user_id);
 
-      if (userError || !userData?.user?.email) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: `${username}@internal.local`,
-          password,
-        });
+        if (!userError && userData?.user?.email) {
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: userData.user.email,
+            password,
+          });
 
-        if (error) {
-          return { error: { message: 'Usuário ou senha inválidos' } };
+          if (!signInError) {
+            return { error: null };
+          }
         }
-
-        return { error: null };
       }
 
+      // Criar sessão temporária para usuários sem Supabase Auth user_id
+      const tempEmail = `${username}@internal.local`;
+
+      // Tentar criar o usuário se não existir
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: tempEmail,
+        password,
+        options: {
+          data: {
+            username: username,
+            full_name: authResult.full_name
+          }
+        }
+      });
+
+      if (!signUpError) {
+        // Atualizar user_id na tabela user_roles
+        await supabase
+          .from('user_roles')
+          .update({ user_id: (await supabase.auth.getUser()).data.user?.id })
+          .eq('username', username);
+      }
+
+      // Fazer login
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: userData.user.email,
+        email: tempEmail,
         password,
       });
 
@@ -130,6 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return { error: null };
     } catch (error) {
+      console.error('Login error:', error);
       return { error: { message: 'Erro ao fazer login' } };
     }
   };
