@@ -114,12 +114,18 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
   const onDrop = async (acceptedFiles: File[]) => {
     setUploadingFiles(true);
-    
+
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
       for (const file of acceptedFiles) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${order.id}/${Date.now()}.${fileExt}`;
-        
+
         // Upload file to Supabase Storage
         const { error: uploadError } = await supabase.storage
           .from('order-files')
@@ -137,7 +143,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             file_size: file.size,
             file_type: file.type,
             category: 'cliente',
-            uploaded_by: '00000000-0000-0000-0000-000000000000' // Placeholder ID
+            uploaded_by: user.id
           }]);
 
         if (dbError) throw dbError;
@@ -146,6 +152,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
       await fetchFiles();
     } catch (error) {
       console.error('Error uploading files:', error);
+      alert('Erro ao fazer upload dos arquivos');
     } finally {
       setUploadingFiles(false);
     }
