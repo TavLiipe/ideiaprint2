@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogIn, Eye, EyeOff, AlertCircle, Mail, Lock, Sparkles } from 'lucide-react';
+import { LogIn, Eye, EyeOff, AlertCircle, User, Lock } from 'lucide-react';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -24,10 +24,10 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    const { error } = await signIn(username, password);
     
     if (error) {
-      setError('Email ou senha incorretos');
+      setError(error?.message || 'Usuário ou senha inválidos');
     }
     
     setLoading(false);
@@ -78,23 +78,23 @@ const Login = () => {
               </div>
             )}
 
-            {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                E-mail
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Usuário
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
+                  autoComplete="username"
                   className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="seu@email.com"
+                  placeholder="seu_usuario"
                 />
               </div>
             </div>
@@ -114,6 +114,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoComplete="current-password"
                   className="w-full pl-12 pr-12 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   placeholder="••••••••"
                 />
