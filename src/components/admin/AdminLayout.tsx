@@ -6,17 +6,17 @@ import Reports from './Reports';
 import Calendar from './Calendar';
 import Settings from './Settings';
 import { useAuth } from '../../contexts/AuthContext';
-import { 
-  LogOut, 
-  Menu, 
-  X, 
-  Home, 
-  Package, 
-  Plus, 
+import {
+  LogOut,
+  Menu,
+  X,
+  Home,
+  Package,
+  Plus,
   BarChart3,
   User,
   Users,
-  Settings,
+  Settings as SettingsIcon,
   FileText,
   Calendar as CalendarIcon,
   Search,
@@ -274,7 +274,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <Settings className="w-5 h-5 mr-3" />
+              <SettingsIcon className="w-5 h-5 mr-3" />
               Configurações
             </button>
 
@@ -385,7 +385,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
               }`}
             >
-              <Settings className="w-6 h-6" />
+              <SettingsIcon className="w-6 h-6" />
               <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Configurações
               </div>
