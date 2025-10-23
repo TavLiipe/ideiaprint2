@@ -20,14 +20,35 @@ Deno.serve(async (req: Request) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Create user in auth.users
+    const { data: requestData } = await req.json();
+    const username = requestData?.username || 'admin';
+    const password = requestData?.password || 'admin123';
+    const fullName = requestData?.full_name || 'Administrador';
+    const email = requestData?.email || `${username}@internal.local`;
+
+    const { data: existingUser } = await supabase
+      .from('user_roles')
+      .select('username')
+      .eq('username', username)
+      .maybeSingle();
+
+    if (existingUser) {
+      return new Response(
+        JSON.stringify({ error: 'Username already exists' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: 'admin@internal.local',
-      password: 'admin123',
+      email: email,
+      password: password,
       email_confirm: true,
       user_metadata: {
-        username: 'admin',
-        full_name: 'Administrador'
+        username: username,
+        full_name: fullName
       }
     });
 
@@ -41,15 +62,38 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Update user_roles with the auth user_id
-    const { error: updateError } = await supabase
-      .from('user_roles')
-      .update({ user_id: authData.user.id })
-      .eq('username', 'admin');
+    const { data: hashResult, error: hashError } = await supabase.rpc('hash_password', {
+      p_password: password
+    });
 
-    if (updateError) {
+    if (hashError || !hashResult) {
+      await supabase.auth.admin.deleteUser(authData.user.id);
+
       return new Response(
-        JSON.stringify({ error: updateError.message }),
+        JSON.stringify({ error: 'Failed to hash password' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const { error: insertError } = await supabase
+      .from('user_roles')
+      .insert({
+        user_id: authData.user.id,
+        username: username,
+        password_hash: hashResult,
+        full_name: fullName,
+        role: 'ADMIN',
+        is_active: true
+      });
+
+    if (insertError) {
+      await supabase.auth.admin.deleteUser(authData.user.id);
+
+      return new Response(
+        JSON.stringify({ error: insertError.message }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -58,10 +102,11 @@ Deno.serve(async (req: Request) => {
     }
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: 'Admin user created successfully',
-        user_id: authData.user.id 
+        username: username,
+        user_id: authData.user.id
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
