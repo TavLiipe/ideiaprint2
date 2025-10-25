@@ -1,56 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import NotificationToast, { ToastNotification } from './NotificationToast';
-import { useNotifications } from '../../hooks/useNotifications';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
-interface ToastContainerProps {
-  onNotificationClick?: (orderId: string) => void;
+export interface Notification {
+  id: string;
+  type: string;
+  message: any;
+  order_id?: string;
+  order?: any;
+  is_read: boolean;
+  created_at: string;
 }
 
-const ToastContainer: React.FC<ToastContainerProps> = ({ onNotificationClick }) => {
-  const [toasts, setToasts] = useState<ToastNotification[]>([]);
-  const { notifications } = useNotifications();
-  const [lastNotificationId, setLastNotificationId] = useState<string | null>(null);
+export const useNotifications = () => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    if (notifications.length === 0) return;
+    fetchNotifications();
 
-    const latestNotification = notifications[0];
+    const subscription = supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+        },
+        (payload) => {
+          const newNotification = payload.new as Notification;
+          setNotifications((prev) => [newNotification, ...prev]);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'notifications',
+        },
+        (payload) => {
+          const updatedNotification = payload.new as Notification;
+          setNotifications((prev) =>
+            prev.map((n) => (n.id === updatedNotification.id ? updatedNotification : n))
+          );
+        }
+      )
+      .subscribe();
 
-    if (latestNotification.id === lastNotificationId) return;
-    if (latestNotification.is_read) return;
-
-    setLastNotificationId(latestNotification.id);
-
-    const newToast: ToastNotification = {
-      id: latestNotification.id,
-      type: latestNotification.type,
-      message: latestNotification.message?.message || 'Nova mensagem KKKKKK',
-      orderName: latestNotification.order
-        ? `${latestNotification.order.client_name} - ${latestNotification.order.service}`
-        : undefined,
-      userName: latestNotification.message?.user_name,
-      onClose: () => removeToast(latestNotification.id),
-      onClick: onNotificationClick
-        ? () => onNotificationClick(latestNotification.order_id)
-        : undefined,
+    return () => {
+      supabase.removeChannel(subscription);
     };
+  }, []);
 
-    setToasts((prev) => [...prev, newToast]);
-  }, [notifications]);
+  const fetchNotifications = async () => {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-  const removeToast = (id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    if (!error && data) setNotifications(data);
   };
 
-  return (
-    <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
-      <div className="space-y-2 pointer-events-auto">
-        {toasts.map((toast) => (
-          <NotificationToast key={toast.id} {...toast} />
-        ))}
-      </div>
-    </div>
-  );
+  return { notifications, setNotifications };
 };
-
-export default ToastContainer;
