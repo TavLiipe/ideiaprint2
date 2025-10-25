@@ -51,10 +51,7 @@ export const useOrderChat = (orderId: string) => {
 
       const { data: messagesData, error: messagesError } = await supabase
         .from('order_messages')
-        .select(`
-          *,
-          attachments:message_attachments(*)
-        `)
+        .select(`*, attachments:message_attachments(*)`)
         .eq('order_id', orderId)
         .order('created_at', { ascending: true });
 
@@ -83,26 +80,25 @@ export const useOrderChat = (orderId: string) => {
         async (payload) => {
           const newMessage = payload.new as ChatMessage;
 
-          setTimeout(async () => {
-            const { data: attachments } = await supabase
-              .from('message_attachments')
-              .select('*')
-              .eq('message_id', newMessage.id);
+          // Busca attachments se houver
+          const { data: attachments } = await supabase
+            .from('message_attachments')
+            .select('*')
+            .eq('message_id', newMessage.id);
 
-            newMessage.attachments = attachments || [];
+          newMessage.attachments = attachments || [];
 
-            setMessages((prev) => {
-              const exists = prev.find(msg => msg.id === newMessage.id);
-              if (exists) {
-                return prev.map(msg =>
-                  msg.id === newMessage.id
-                    ? { ...msg, attachments: newMessage.attachments }
-                    : msg
-                );
-              }
-              return [...prev, newMessage];
-            });
-          }, 100);
+          setMessages((prev) => {
+            const exists = prev.find(msg => msg.id === newMessage.id);
+            if (exists) {
+              return prev.map(msg =>
+                msg.id === newMessage.id
+                  ? { ...msg, attachments: newMessage.attachments }
+                  : msg
+              );
+            }
+            return [...prev, newMessage];
+          });
         }
       )
       .on(
@@ -169,9 +165,7 @@ export const useOrderChat = (orderId: string) => {
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        return { success: false, error: 'Usuário não autenticado' };
-      }
+      if (!user) return { success: false, error: 'Usuário não autenticado' };
 
       const { data: userRole } = await supabase
         .from('user_roles')
@@ -193,8 +187,24 @@ export const useOrderChat = (orderId: string) => {
 
       if (messageError) throw messageError;
 
-      if (files && files.length > 0 && messageData) {
-        await uploadAttachments(messageData.id, files);
+      // Atualiza estado local imediatamente
+      const newMessage: ChatMessage = { ...messageData, attachments: [], is_edited: false };
+      setMessages((prev) => [...prev, newMessage]);
+
+      // Upload de arquivos se houver
+      if (files && files.length > 0) {
+        await uploadAttachments(newMessage.id, files);
+        // Atualiza attachments depois do upload
+        const { data: attachments } = await supabase
+          .from('message_attachments')
+          .select('*')
+          .eq('message_id', newMessage.id);
+
+        setMessages((prev) =>
+          prev.map(msg =>
+            msg.id === newMessage.id ? { ...msg, attachments: attachments || [] } : msg
+          )
+        );
       }
 
       return { success: true };
@@ -212,10 +222,7 @@ export const useOrderChat = (orderId: string) => {
 
       const { error: uploadError } = await supabase.storage
         .from('chat-attachments')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
+        .upload(filePath, file, { cacheControl: '3600', upsert: false });
 
       if (uploadError) throw uploadError;
 
@@ -240,7 +247,6 @@ export const useOrderChat = (orderId: string) => {
       const { data } = await supabase.storage
         .from('chat-attachments')
         .createSignedUrl(filePath, 3600);
-
       return data?.signedUrl || null;
     } catch (err) {
       console.error('Error getting attachment URL:', err);
