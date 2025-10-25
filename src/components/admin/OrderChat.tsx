@@ -122,15 +122,24 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
 
   const getUserColor = (userId: string): string => {
     const colors = [
-      'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700',
-      'bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700',
-      'bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700',
-      'bg-pink-100 dark:bg-pink-900/30 border-pink-300 dark:border-pink-700',
-      'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700',
+      'bg-blue-50 dark:bg-blue-950/50',
+      'bg-green-50 dark:bg-green-950/50',
+      'bg-amber-50 dark:bg-amber-950/50',
+      'bg-rose-50 dark:bg-rose-950/50',
+      'bg-cyan-50 dark:bg-cyan-950/50',
     ];
 
     const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colors[hash % colors.length];
+  };
+
+  const getUserInitials = (name: string): string => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   if (loading) {
@@ -213,62 +222,77 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
           messages.map((message) => {
             const isOwnMessage = message.user_id === currentUserId;
             const colorClass = getUserColor(message.user_id);
+            const initials = getUserInitials(message.user_name);
 
             return (
               <div
                 key={message.id}
-                className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
+                className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
               >
+                {/* Avatar */}
                 <div
-                  className={`max-w-[70%] ${
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
                     isOwnMessage
-                      ? 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700'
-                      : colorClass
-                  } border rounded-lg p-3 shadow-sm`}
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-600 dark:bg-gray-400 text-white dark:text-gray-900'
+                  }`}
                 >
-                  {/* User Info */}
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  {initials}
+                </div>
+
+                {/* Message Content */}
+                <div className={`flex flex-col max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                  {/* User Name and Time */}
+                  <div className={`flex items-center gap-2 mb-1 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>
+                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                       {message.user_name}
                     </span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                      {format(new Date(message.created_at), 'HH:mm', { locale: ptBR })}
+                    </span>
+                    {message.is_edited && (
+                      <span className="text-xs text-gray-400 dark:text-gray-500">(editado)</span>
+                    )}
+                  </div>
+
+                  {/* Message Bubble */}
+                  <div
+                    className={`relative group ${
+                      isOwnMessage
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
+                    } rounded-2xl px-4 py-2 shadow-sm`}
+                  >
+                    {/* Delete Button */}
                     {isOwnMessage && (
                       <button
                         onClick={() => handleDeleteMessage(message.id)}
-                        className="ml-2 text-red-500 hover:text-red-700 dark:hover:text-red-400"
+                        className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
                         title="Excluir mensagem"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
                     )}
-                  </div>
 
-                  {/* Message Text */}
-                  <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">
-                    {message.message}
-                  </p>
+                    {/* Message Text */}
+                    <p className="text-sm whitespace-pre-wrap break-words">
+                      {message.message}
+                    </p>
 
-                  {/* Attachments */}
-                  {message.attachments && message.attachments.length > 0 && (
-                    <div className="mt-2 space-y-2">
-                      {message.attachments.map((attachment) => (
-                        <AttachmentPreview
-                          key={attachment.id}
-                          attachment={attachment}
-                          getAttachmentUrl={getAttachmentUrl}
-                          getFileIcon={getFileIcon}
-                          formatFileSize={formatFileSize}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Timestamp */}
-                  <div className="flex items-center justify-end mt-1">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {format(new Date(message.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
-                    </span>
-                    {message.is_edited && (
-                      <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">(editado)</span>
+                    {/* Attachments */}
+                    {message.attachments && message.attachments.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {message.attachments.map((attachment) => (
+                          <AttachmentPreview
+                            key={attachment.id}
+                            attachment={attachment}
+                            getAttachmentUrl={getAttachmentUrl}
+                            getFileIcon={getFileIcon}
+                            formatFileSize={formatFileSize}
+                            isOwnMessage={isOwnMessage}
+                          />
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -353,6 +377,7 @@ interface AttachmentPreviewProps {
   getAttachmentUrl: (path: string) => Promise<string | null>;
   getFileIcon: (type: string) => JSX.Element;
   formatFileSize: (bytes: number) => string;
+  isOwnMessage: boolean;
 }
 
 const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
@@ -360,6 +385,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   getAttachmentUrl,
   getFileIcon,
   formatFileSize,
+  isOwnMessage,
 }) => {
   const [url, setUrl] = useState<string | null>(null);
 
@@ -382,32 +408,52 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 rounded p-2">
+    <div className={`flex items-center gap-2 rounded-lg p-2 ${
+      isOwnMessage
+        ? 'bg-orange-600/20'
+        : 'bg-gray-100 dark:bg-gray-700/50'
+    }`}>
       {attachment.file_type.startsWith('image/') && url ? (
         <img
           src={url}
           alt={attachment.file_name}
-          className="w-16 h-16 object-cover rounded"
+          className="w-16 h-16 object-cover rounded-lg"
         />
       ) : (
-        <div className="w-16 h-16 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded">
+        <div className={`w-16 h-16 flex items-center justify-center rounded-lg ${
+          isOwnMessage
+            ? 'bg-orange-600/30'
+            : 'bg-gray-200 dark:bg-gray-600'
+        }`}>
           {getFileIcon(attachment.file_type)}
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
+        <p className={`text-xs font-medium truncate ${
+          isOwnMessage
+            ? 'text-white'
+            : 'text-gray-700 dark:text-gray-300'
+        }`}>
           {attachment.file_name}
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className={`text-xs ${
+          isOwnMessage
+            ? 'text-orange-100'
+            : 'text-gray-500 dark:text-gray-400'
+        }`}>
           {formatFileSize(attachment.file_size)}
         </p>
       </div>
       <button
         onClick={handleDownload}
-        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+        className={`p-1.5 rounded-lg transition-colors ${
+          isOwnMessage
+            ? 'hover:bg-orange-600/30 text-white'
+            : 'hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400'
+        }`}
         title="Baixar arquivo"
       >
-        <Download className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+        <Download className="w-4 h-4" />
       </button>
     </div>
   );

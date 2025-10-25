@@ -160,6 +160,8 @@ export const useOrderChat = (orderId: string) => {
 
       if (files && files.length > 0 && messageData) {
         await uploadAttachments(messageData.id, files);
+
+        await fetchMessages();
       }
 
       return { success: true };
