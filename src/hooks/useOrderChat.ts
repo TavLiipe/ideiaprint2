@@ -140,17 +140,17 @@ export const useOrderChat = (orderId: string) => {
 
       const { data: userRole } = await supabase
         .from('user_roles')
-        .select('name, email')
+        .select('full_name, username')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       const { data: messageData, error: messageError } = await supabase
         .from('order_messages')
         .insert({
           order_id: orderId,
           user_id: user.id,
-          user_name: userRole?.name || user.email?.split('@')[0] || 'Usuário',
-          user_email: userRole?.email || user.email || '',
+          user_name: userRole?.full_name || userRole?.username || user.email?.split('@')[0] || 'Usuário',
+          user_email: user.email || '',
           message: messageText,
         })
         .select()
