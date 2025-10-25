@@ -39,20 +39,13 @@ const Settings: React.FC = () => {
   const [statuses, setStatuses] = useState<OrderStatus[]>([]);
   const [users, setUsers] = useState<UserAccount[]>([]);
   const [loading, setLoading] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
   const [showClientModal, setShowClientModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
 
   useEffect(() => {
-    if (user !== null) {
-      setAuthLoading(false);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!isAdmin || authLoading) return;
+    if (!isAdmin) return;
 
     if (activeTab === 'clients') {
       fetchClients();
@@ -61,7 +54,7 @@ const Settings: React.FC = () => {
     } else if (activeTab === 'users') {
       fetchUsers();
     }
-  }, [activeTab, isAdmin, authLoading]);
+  }, [activeTab, isAdmin]);
 
   const fetchClients = async () => {
     setLoading(true);
@@ -250,7 +243,7 @@ const Settings: React.FC = () => {
     }
   };
 
-  if (authLoading) {
+  if (user === null || (user && userRole === null)) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
