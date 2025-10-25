@@ -24,7 +24,7 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ onNotificationClick }) 
     const newToast: ToastNotification = {
       id: latestNotification.id,
       type: latestNotification.type,
-      message: latestNotification.message?.message || 'Nova mensagem',
+      message: latestNotification.message?.message || 'Nova mensagem KKKKKK',
       orderName: latestNotification.order
         ? `${latestNotification.order.client_name} - ${latestNotification.order.service}`
         : undefined,
