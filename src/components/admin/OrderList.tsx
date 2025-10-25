@@ -168,9 +168,12 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full border-separate" style={{ borderSpacing: '0 8px' }}>
               <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                 <tr>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    ID
+                  </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Cliente
                   </th>
@@ -195,11 +198,16 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800">
-                {filteredOrders.map((order) => (
+                {filteredOrders.map((order, index) => (
                   <tr
   key={order.id}
-  className="border-l-4 border-orange-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+  className="border-2 border-orange-500 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
 >
+                    <td className="px-6 py-6 whitespace-nowrap">
+                      <div className="text-sm font-bold text-orange-500">
+                        #{String(index + 1).padStart(3, '0')}
+                      </div>
+                    </td>
                     <td className="px-6 py-6 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{order.client_name}</div>
