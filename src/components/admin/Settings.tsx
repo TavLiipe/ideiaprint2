@@ -31,7 +31,7 @@ interface UserAccount {
 }
 
 type TabType = 'clients' | 'statuses' | 'users';
-
+const { isAdmin, loading } = useAuth();
 const Settings: React.FC = () => {
   const { userRole, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('clients');
@@ -43,7 +43,6 @@ const Settings: React.FC = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
-  const { isAdmin, loading } = useAuth();
 
   useEffect(() => {
     if (!isAdmin) return;
