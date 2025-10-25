@@ -83,14 +83,26 @@ export const useOrderChat = (orderId: string) => {
         async (payload) => {
           const newMessage = payload.new as ChatMessage;
 
-          const { data: attachments } = await supabase
-            .from('message_attachments')
-            .select('*')
-            .eq('message_id', newMessage.id);
+          setTimeout(async () => {
+            const { data: attachments } = await supabase
+              .from('message_attachments')
+              .select('*')
+              .eq('message_id', newMessage.id);
 
-          newMessage.attachments = attachments || [];
+            newMessage.attachments = attachments || [];
 
-          setMessages((prev) => [...prev, newMessage]);
+            setMessages((prev) => {
+              const exists = prev.find(msg => msg.id === newMessage.id);
+              if (exists) {
+                return prev.map(msg =>
+                  msg.id === newMessage.id
+                    ? { ...msg, attachments: newMessage.attachments }
+                    : msg
+                );
+              }
+              return [...prev, newMessage];
+            });
+          }, 100);
         }
       )
       .on(
@@ -121,6 +133,29 @@ export const useOrderChat = (orderId: string) => {
         (payload) => {
           const deletedMessage = payload.old as ChatMessage;
           setMessages((prev) => prev.filter((msg) => msg.id !== deletedMessage.id));
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'message_attachments',
+        },
+        async (payload) => {
+          const newAttachment = payload.new as MessageAttachment;
+
+          setMessages((prev) =>
+            prev.map((msg) => {
+              if (msg.id === newAttachment.message_id) {
+                return {
+                  ...msg,
+                  attachments: [...(msg.attachments || []), newAttachment],
+                };
+              }
+              return msg;
+            })
+          );
         }
       )
       .subscribe();
@@ -160,8 +195,6 @@ export const useOrderChat = (orderId: string) => {
 
       if (files && files.length > 0 && messageData) {
         await uploadAttachments(messageData.id, files);
-
-        await fetchMessages();
       }
 
       return { success: true };
