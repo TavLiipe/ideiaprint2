@@ -19,10 +19,12 @@ import {
   Save,
   AlertCircle,
   CheckCircle,
-  History
+  History,
+  MessageSquare
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import OrderChat from './OrderChat';
 
 interface Order {
   id: string;
@@ -73,11 +75,24 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
   const [files, setFiles] = useState<OrderFile[]>([]);
   const [history, setHistory] = useState<OrderHistory[]>([]);
   const [uploadingFiles, setUploadingFiles] = useState(false);
+  const [activeTab, setActiveTab] = useState<'details' | 'chat'>('details');
+  const [currentUserId, setCurrentUserId] = useState<string>('');
   const [formData, setFormData] = useState({
     status: order.status,
     description: order.description || '',
     delivery_date: order.delivery_date
   });
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  const getCurrentUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setCurrentUserId(user.id);
+    }
+  };
 
   useEffect(() => {
     fetchFiles();
@@ -306,7 +321,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
@@ -314,24 +329,59 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             <p className="text-sm text-gray-500 dark:text-gray-400">ID: {order.id.slice(0, 8)}</p>
           </div>
           <div className="flex items-center space-x-2">
-            {!editing && (
+            {!editing && activeTab === 'details' && (
               <button
                 onClick={() => setEditing(true)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                <Edit className="w-5 h-5 text-gray-500" />
+                <Edit className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               </button>
             )}
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
         </div>
 
-        <div className="p-6 space-y-8">
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-200 dark:border-gray-700 px-6">
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`px-6 py-3 font-medium transition-colors relative ${
+              activeTab === 'details'
+                ? 'text-orange-600 dark:text-orange-400'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            <Package className="w-5 h-5 inline-block mr-2" />
+            Detalhes
+            {activeTab === 'details' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500" />
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={`px-6 py-3 font-medium transition-colors relative ${
+              activeTab === 'chat'
+                ? 'text-orange-600 dark:text-orange-400'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            <MessageSquare className="w-5 h-5 inline-block mr-2" />
+            Chat
+            {activeTab === 'chat' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500" />
+            )}
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto">
+          {activeTab === 'details' ? (
+            <div className="p-6 space-y-8">
           {/* Status and Dates */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -548,7 +598,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => setEditing(false)}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancelar
               </button>
@@ -559,6 +609,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
                 <Save className="w-5 h-5 mr-2" />
                 Salvar Alterações
               </button>
+            </div>
+          )}
+            </div>
+          ) : (
+            <div className="p-6">
+              <OrderChat orderId={order.id} currentUserId={currentUserId} />
             </div>
           )}
         </div>

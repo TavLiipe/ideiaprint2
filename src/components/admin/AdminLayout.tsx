@@ -6,6 +6,8 @@ import OrderList from './OrderList';
 import Reports from './Reports';
 import Calendar from './Calendar';
 import Settings from './Settings';
+import NotificationBell from './NotificationBell';
+import ToastContainer from './ToastContainer';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import {
@@ -94,6 +96,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleSelectOrder = (order: Order) => {
     setSelectedOrder(order);
+  };
+
+  const handleNotificationClick = (orderId: string) => {
+    const order = orders.find((o) => o.id === orderId);
+    if (order) {
+      setSelectedOrder(order);
+      setCurrentView('orders');
+    }
   };
 
   const handleCloseOrderForm = () => {
@@ -436,6 +446,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         {/* Top bar - Desktop */}
         <div className="hidden lg:flex items-center justify-end h-16 px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
           <div className="flex items-center space-x-4">
+            <NotificationBell onNotificationClick={handleNotificationClick} />
             {user && (
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
@@ -484,6 +495,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <span className="text-lg font-bold text-gray-900 dark:text-white">Ideia Print</span>
             </div>
             <div className="flex items-center space-x-2">
+              <NotificationBell onNotificationClick={handleNotificationClick} />
               {user && (
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
@@ -524,12 +536,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       )}
 
       {selectedOrder && (
-        <OrderDetail 
+        <OrderDetail
           order={selectedOrder}
           onClose={handleCloseOrderDetail}
           onUpdate={handleOrderSaved}
         />
       )}
+
+      {/* Toast Notifications */}
+      <ToastContainer onNotificationClick={handleNotificationClick} />
     </div>
   );
 };
