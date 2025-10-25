@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
 import OrderForm from './OrderForm';
 import OrderDetail from './OrderDetail';
 import OrderList from './OrderList';
@@ -39,11 +40,12 @@ interface Order {
   client_company?: string;
   service: string;
   description?: string;
-  status: 'em_producao' | 'finalizado' | 'cancelado';
+  status: string;
   delivery_date: string;
   created_at: string;
   updated_at: string;
   employee_id: string;
+  creator_email: string;
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
@@ -53,6 +55,28 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    if (currentView === 'orders') {
+      fetchOrders();
+    }
+  }, [currentView]);
+
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders_with_creator')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setOrders(data || []);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setOrders([]);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -81,10 +105,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const handleOrderSaved = () => {
-    // Refresh orders list if we're on orders view
     if (currentView === 'orders') {
-      // This will trigger a re-render of OrderList
-      setCurrentView('orders');
+      fetchOrders();
     }
   };
 
@@ -92,9 +114,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     switch (currentView) {
       case 'orders':
         return (
-          <OrderList 
+          <OrderList
+            orders={orders}
             onSelectOrder={handleSelectOrder}
             onNewOrder={handleNewOrder}
+            onRefresh={fetchOrders}
           />
         );
       case 'reports':
