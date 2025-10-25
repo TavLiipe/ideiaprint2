@@ -15,27 +15,44 @@ import { ptBR } from 'date-fns/locale';
 
 interface DashboardStats {
   totalOrders: number;
-  inProduction: number;
-  completed: number;
-  cancelled: number;
+  statusCounts: Record<string, { count: number; name: string; color: string }>;
   totalFiles: number;
   storageUsed: number;
+}
+
+interface OrderStatus {
+  id: string;
+  name: string;
+  color: string;
+  order_index: number;
 }
 
 const Dashboard = () => {
   const [stats, setStats] = useState<DashboardStats>({
     totalOrders: 0,
-    inProduction: 0,
-    completed: 0,
-    cancelled: 0,
+    statusCounts: {},
     totalFiles: 0,
     storageUsed: 0
   });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [statuses, setStatuses] = useState<OrderStatus[]>([]);
 
   useEffect(() => {
+    fetchStatuses();
     fetchDashboardData();
   }, []);
+
+  const fetchStatuses = async () => {
+    const { data } = await supabase
+      .from('order_statuses')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index');
+
+    if (data) {
+      setStatuses(data);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -43,8 +60,9 @@ const Dashboard = () => {
       let orders: any[] = [];
       try {
         const { data: ordersData } = await supabase
-          .from('orders')
-          .select('status, created_at, client_name, service, delivery_date');
+          .from('orders_with_creator')
+          .select('*')
+          .order('created_at', { ascending: false });
 
         orders = ordersData || [];
       } catch (err) {
@@ -53,9 +71,21 @@ const Dashboard = () => {
 
       // Calculate stats from orders
       const totalOrders = orders.length;
-      const inProduction = orders.filter(o => o.status === 'em_producao').length;
-      const completed = orders.filter(o => o.status === 'finalizado').length;
-      const cancelled = orders.filter(o => o.status === 'cancelado').length;
+
+      // Count orders by status
+      const statusCounts: Record<string, { count: number; name: string; color: string }> = {};
+      orders.forEach(order => {
+        if (order.status_id) {
+          if (!statusCounts[order.status_id]) {
+            statusCounts[order.status_id] = {
+              count: 0,
+              name: order.status || 'Desconhecido',
+              color: order.status_color || '#6B7280'
+            };
+          }
+          statusCounts[order.status_id].count++;
+        }
+      });
 
       // Fetch files
       let files: any[] = [];
@@ -74,9 +104,7 @@ const Dashboard = () => {
 
       setStats({
         totalOrders,
-        inProduction,
-        completed,
-        cancelled,
+        statusCounts,
         totalFiles,
         storageUsed
       });
@@ -89,30 +117,12 @@ const Dashboard = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'finalizado':
-        return 'bg-green-100 text-green-800';
-      case 'cancelado':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'Em Produção';
-      case 'finalizado':
-        return 'Finalizado';
-      case 'cancelado':
-        return 'Cancelado';
-      default:
-        return status;
-    }
+  const getStatusStyle = (color: string) => {
+    const bgColor = color + '20';
+    return {
+      backgroundColor: bgColor,
+      color: color
+    };
   };
 
   const formatFileSize = (bytes: number) => {
@@ -149,29 +159,19 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Em Produção</p>
-              <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-500">{stats.inProduction}</p>
-            </div>
-            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Finalizados</p>
-              <p className="text-3xl font-bold text-green-600 dark:text-green-500">{stats.completed}</p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+        {Object.entries(stats.statusCounts).slice(0, 2).map(([statusId, statusInfo]) => (
+          <div key={statusId} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{statusInfo.name}</p>
+                <p className="text-3xl font-bold" style={{ color: statusInfo.color }}>{statusInfo.count}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: statusInfo.color + '20' }}>
+                <Package className="w-6 h-6" style={{ color: statusInfo.color }} />
+              </div>
             </div>
           </div>
-        </div>
+        ))}
 
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
@@ -211,8 +211,11 @@ const Dashboard = () => {
                     </p>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {getStatusText(order.status)}
+                    <span
+                      className="px-3 py-1.5 rounded-full text-xs font-medium"
+                      style={getStatusStyle(order.status_color || '#6B7280')}
+                    >
+                      {order.status || 'Sem Status'}
                     </span>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                       Entrega: {order.delivery_date ? format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR }) : 'N/A'}

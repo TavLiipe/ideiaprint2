@@ -35,10 +35,19 @@ interface Order {
   service: string;
   description?: string;
   status: 'em_producao' | 'finalizado' | 'cancelado';
+  status_id: string | null;
   delivery_date: string;
   created_at: string;
   updated_at: string;
   employee_id: string;
+}
+
+interface OrderStatus {
+  id: string;
+  name: string;
+  color: string;
+  order_index: number;
+  is_active: boolean;
 }
 
 interface OrderFile {
@@ -77,15 +86,29 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const [activeTab, setActiveTab] = useState<'details' | 'chat'>('details');
   const [currentUserId, setCurrentUserId] = useState<string>('');
+  const [availableStatuses, setAvailableStatuses] = useState<OrderStatus[]>([]);
   const [formData, setFormData] = useState({
-    status: order.status,
+    status_id: order.status_id || '',
     description: order.description || '',
     delivery_date: order.delivery_date
   });
 
   useEffect(() => {
     getCurrentUser();
+    fetchStatuses();
   }, []);
+
+  const fetchStatuses = async () => {
+    const { data } = await supabase
+      .from('order_statuses')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index');
+
+    if (data) {
+      setAvailableStatuses(data);
+    }
+  };
 
   const getCurrentUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -187,13 +210,15 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
       const changes = [];
 
-      if (formData.status !== order.status) {
+      if (formData.status_id !== order.status_id) {
+        const oldStatus = availableStatuses.find(s => s.id === order.status_id);
+        const newStatus = availableStatuses.find(s => s.id === formData.status_id);
         changes.push({
           order_id: order.id,
           changed_by: user.id,
           field_name: 'status',
-          old_value: getStatusText(order.status),
-          new_value: getStatusText(formData.status)
+          old_value: oldStatus?.name || 'Sem Status',
+          new_value: newStatus?.name || 'Sem Status'
         });
       }
 
@@ -220,7 +245,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
       const { error } = await supabase
         .from('orders')
         .update({
-          status: formData.status,
+          status_id: formData.status_id,
           description: formData.description,
           delivery_date: formData.delivery_date,
           updated_at: new Date().toISOString()
@@ -285,30 +310,18 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'finalizado':
-        return 'bg-green-100 text-green-800';
-      case 'cancelado':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  const getCurrentStatus = (): OrderStatus | undefined => {
+    return availableStatuses.find(s => s.id === order.status_id);
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'Em Produção';
-      case 'finalizado':
-        return 'Finalizado';
-      case 'cancelado':
-        return 'Cancelado';
-      default:
-        return status;
-    }
+  const getStatusStyle = (status: OrderStatus | undefined) => {
+    if (!status) return { backgroundColor: '#E5E7EB', color: '#374151' };
+
+    const bgColor = status.color + '20';
+    return {
+      backgroundColor: bgColor,
+      color: status.color
+    };
   };
 
   const formatFileSize = (bytes: number) => {
@@ -388,17 +401,22 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
               {editing ? (
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as any }))}
+                  value={formData.status_id}
+                  onChange={(e) => setFormData(prev => ({ ...prev, status_id: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
-                  <option value="em_producao">Em Produção</option>
-                  <option value="finalizado">Finalizado</option>
-                  <option value="cancelado">Cancelado</option>
+                  {availableStatuses.map(status => (
+                    <option key={status.id} value={status.id}>
+                      {status.name}
+                    </option>
+                  ))}
                 </select>
               ) : (
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                  {getStatusText(order.status)}
+                <span
+                  className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium"
+                  style={getStatusStyle(getCurrentStatus())}
+                >
+                  {getCurrentStatus()?.name || 'Sem Status'}
                 </span>
               )}
             </div>

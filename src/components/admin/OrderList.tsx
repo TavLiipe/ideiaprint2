@@ -12,9 +12,18 @@ interface Order {
   service: string;
   description?: string;
   status: string;
+  status_id: string | null;
   delivery_date: string;
   created_at: string;
   creator_email: string;
+}
+
+interface OrderStatus {
+  id: string;
+  name: string;
+  color: string;
+  order_index: number;
+  is_active: boolean;
 }
 
 interface OrderListProps {
@@ -29,16 +38,33 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
   const [statusFilter, setStatusFilter] = useState('all');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
   const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
+  const [availableStatuses, setAvailableStatuses] = useState<OrderStatus[]>([]);
+
+  useEffect(() => {
+    fetchStatuses();
+  }, []);
+
+  const fetchStatuses = async () => {
+    const { data } = await supabase
+      .from('order_statuses')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index');
+
+    if (data) {
+      setAvailableStatuses(data);
+    }
+  };
 
   useEffect(() => {
     filterOrders();
   }, [orders, searchTerm, statusFilter]);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = async (orderId: string, newStatusId: string) => {
     try {
       const { error } = await supabase
         .from('orders')
-        .update({ status: newStatus })
+        .update({ status_id: newStatusId })
         .eq('id', orderId);
 
       if (error) throw error;
@@ -64,49 +90,28 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
     }
 
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(order => order.status === statusFilter);
+      filtered = filtered.filter(order => order.status_id === statusFilter);
     }
 
     setFilteredOrders(filtered);
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return <Clock className="w-4 h-4 text-yellow-600" />;
-      case 'finalizado':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case 'cancelado':
-        return <XCircle className="w-4 h-4 text-red-600" />;
-      default:
-        return null;
+  const getOrderStatus = (order: Order): OrderStatus | undefined => {
+    if (order.status_id) {
+      return availableStatuses.find(s => s.id === order.status_id);
     }
+    return undefined;
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'finalizado':
-        return 'bg-green-100 text-green-800';
-      case 'cancelado':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const getStatusStyle = (status: OrderStatus | undefined) => {
+    if (!status) return { backgroundColor: '#E5E7EB', color: '#374151' };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'em_producao':
-        return 'Em Produção';
-      case 'finalizado':
-        return 'Finalizado';
-      case 'cancelado':
-        return 'Cancelado';
-      default:
-        return status;
-    }
+    const bgColor = status.color + '20';
+    return {
+      backgroundColor: bgColor,
+      color: status.color,
+      borderColor: status.color
+    };
   };
 
   return (
@@ -145,9 +150,9 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
               className="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="all">Todos os Status</option>
-              <option value="em_producao">Em Produção</option>
-              <option value="finalizado">Finalizado</option>
-              <option value="cancelado">Cancelado</option>
+              {availableStatuses.map(status => (
+                <option key={status.id} value={status.id}>{status.name}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -229,35 +234,27 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
                       <div className="relative status-menu-container">
                         <button
                           onClick={() => setStatusMenuOpen(statusMenuOpen === order.id ? null : order.id)}
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer ${getStatusColor(order.status)}`}
+                          className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer border"
+                          style={getStatusStyle(getOrderStatus(order))}
                           title="Clique para alterar o status"
                         >
-                          {getStatusIcon(order.status)}
-                          <span className="ml-1">{getStatusText(order.status)}</span>
+                          <span>{getOrderStatus(order)?.name || 'Sem Status'}</span>
                         </button>
                         {statusMenuOpen === order.id && (
                           <div className="absolute z-10 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 py-1">
-                            <button
-                              onClick={() => handleStatusChange(order.id, 'em_producao')}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center space-x-2"
-                            >
-                              <Clock className="w-4 h-4 text-yellow-600" />
-                              <span>Em Produção</span>
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(order.id, 'finalizado')}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center space-x-2"
-                            >
-                              <CheckCircle className="w-4 h-4 text-green-600" />
-                              <span>Finalizado</span>
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(order.id, 'cancelado')}
-                              className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center space-x-2"
-                            >
-                              <XCircle className="w-4 h-4 text-red-600" />
-                              <span>Cancelado</span>
-                            </button>
+                            {availableStatuses.map(status => (
+                              <button
+                                key={status.id}
+                                onClick={() => handleStatusChange(order.id, status.id)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center space-x-2"
+                              >
+                                <div
+                                  className="w-3 h-3 rounded-full"
+                                  style={{ backgroundColor: status.color }}
+                                />
+                                <span>{status.name}</span>
+                              </button>
+                            ))}
                           </div>
                         )}
                       </div>

@@ -43,6 +43,7 @@ interface Order {
   service: string;
   description?: string;
   status: string;
+  status_id: string | null;
   delivery_date: string;
   created_at: string;
   updated_at: string;
