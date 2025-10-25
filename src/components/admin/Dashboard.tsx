@@ -225,29 +225,4 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-6 text-white">
-        <h3 className="text-xl font-bold mb-4">Ações Rápidas</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="bg-white/20 hover:bg-white/30 rounded-lg p-4 text-left transition-colors duration-200">
-            <Plus className="w-6 h-6 mb-2" />
-            <div className="font-semibold">Novo Pedido</div>
-            <div className="text-sm opacity-90">Criar um novo pedido</div>
-          </button>
-          <button className="bg-white/20 hover:bg-white/30 rounded-lg p-4 text-left transition-colors duration-200">
-            <Package className="w-6 h-6 mb-2" />
-            <div className="font-semibold">Ver Pedidos</div>
-            <div className="text-sm opacity-90">Gerenciar pedidos existentes</div>
-          </button>
-          <button className="bg-white/20 hover:bg-white/30 rounded-lg p-4 text-left transition-colors duration-200">
-            <BarChart3 className="w-6 h-6 mb-2" />
-            <div className="font-semibold">Relatórios</div>
-            <div className="text-sm opacity-90">Ver estatísticas detalhadas</div>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default Dashboard;
