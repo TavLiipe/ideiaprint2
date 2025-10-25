@@ -196,7 +196,10 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
               </thead>
               <tbody className="bg-white">
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="border-b-4 border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                  <tr 
+  key={order.id} 
+  className="border-l-4 border-orange-500 hover:bg-gray-50 transition-colors duration-150"
+>
                     <td className="px-6 py-6 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">{order.client_name}</div>
