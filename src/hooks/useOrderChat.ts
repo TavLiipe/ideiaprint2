@@ -35,11 +35,11 @@ export const useOrderChat = (orderId: string) => {
     if (!orderId) return;
 
     fetchMessages();
-    setupRealtimeSubscription();
+    const subscription = setupRealtimeSubscription();
 
     return () => {
-      if (channel) {
-        supabase.removeChannel(channel);
+      if (subscription) {
+        supabase.removeChannel(subscription);
       }
     };
   }, [orderId]);
@@ -67,51 +67,93 @@ export const useOrderChat = (orderId: string) => {
   };
 
   const setupRealtimeSubscription = () => {
-  // Remove canal antigo se existir
-  if (channel) {
-    supabase.removeChannel(channel);
-  }
+    const newChannel = supabase
+      .channel(`order-chat:${orderId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
+        },
+        async (payload) => {
+          console.log('Nova mensagem recebida via realtime:', payload);
+          const newMessage = payload.new as ChatMessage;
 
-  const newChannel = supabase
-    .channel(`order-chat:${orderId}`) // mesmo nome de canal para todos no mesmo chat
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'order_messages',
-        filter: `order_id=eq.${orderId}`,
-      },
-      (payload) => {
-        const newMessage = payload.new as ChatMessage;
+          // Busca attachments
+          const { data: attachments } = await supabase
+            .from('message_attachments')
+            .select('*')
+            .eq('message_id', newMessage.id);
 
-        // Atualiza estado local
-        setMessages((prev) => {
-          const exists = prev.find(msg => msg.id === newMessage.id);
-          if (exists) return prev; // evita duplicatas
-          return [...prev, { ...newMessage, attachments: [] }];
-        });
+          newMessage.attachments = attachments || [];
 
-        // Busca attachments em segundo plano
-        supabase
-          .from('message_attachments')
-          .select('*')
-          .eq('message_id', newMessage.id)
-          .then(({ data: attachments }) => {
-            if (attachments) {
-              setMessages((prev) =>
-                prev.map(msg =>
-                  msg.id === newMessage.id ? { ...msg, attachments } : msg
-                )
-              );
-            }
+          setMessages((prev) => {
+            const exists = prev.find(msg => msg.id === newMessage.id);
+            if (exists) return prev;
+            return [...prev, newMessage];
           });
-      }
-    )
-    .subscribe();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
+        },
+        (payload) => {
+          const updatedMessage = payload.new as ChatMessage;
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
+            )
+          );
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
+        },
+        (payload) => {
+          const deletedMessage = payload.old as ChatMessage;
+          setMessages((prev) => prev.filter((msg) => msg.id !== deletedMessage.id));
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'message_attachments',
+        },
+        async (payload) => {
+          const newAttachment = payload.new as MessageAttachment;
 
-  setChannel(newChannel);
-};
+          setMessages((prev) =>
+            prev.map((msg) => {
+              if (msg.id === newAttachment.message_id) {
+                return {
+                  ...msg,
+                  attachments: [...(msg.attachments || []), newAttachment],
+                };
+              }
+              return msg;
+            })
+          );
+        }
+      )
+      .subscribe();
+
+    setChannel(newChannel);
+    return newChannel;
+  };
 
   const sendMessage = async (
     messageText: string,
@@ -141,24 +183,9 @@ export const useOrderChat = (orderId: string) => {
 
       if (messageError) throw messageError;
 
-      // Atualiza estado local imediatamente
-      const newMessage: ChatMessage = { ...messageData, attachments: [], is_edited: false };
-      setMessages((prev) => [...prev, newMessage]);
-
       // Upload de arquivos se houver
-      if (files && files.length > 0) {
-        await uploadAttachments(newMessage.id, files);
-        // Atualiza attachments depois do upload
-        const { data: attachments } = await supabase
-          .from('message_attachments')
-          .select('*')
-          .eq('message_id', newMessage.id);
-
-        setMessages((prev) =>
-          prev.map(msg =>
-            msg.id === newMessage.id ? { ...msg, attachments: attachments || [] } : msg
-          )
-        );
+      if (files && files.length > 0 && messageData) {
+        await uploadAttachments(messageData.id, files);
       }
 
       return { success: true };
