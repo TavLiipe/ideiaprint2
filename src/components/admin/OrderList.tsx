@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Eye, Clock, CheckCircle, XCircle, Package } from 'lucide-react';
+import { Search, Plus, Eye, Clock, CheckCircle, XCircle, Package, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '../../lib/supabase';
@@ -269,12 +269,22 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
                       {format(new Date(order.created_at), 'dd/MM/yyyy', { locale: ptBR })}
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        onClick={() => onSelectOrder(order)}
-                        className="text-orange-600 hover:text-orange-700 dark:hover:text-orange-500 mr-3"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end space-x-2">
+                        <button
+                          onClick={() => onSelectOrder(order)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                          title="Visualizar detalhes"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => onSelectOrder(order)}
+                          className="p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors"
+                          title="Editar pedido"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
