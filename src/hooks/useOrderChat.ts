@@ -31,6 +31,7 @@ export const useOrderChat = (orderId: string) => {
   const [error, setError] = useState<string | null>(null);
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
 
+  // Inicializa chat
   useEffect(() => {
     if (!orderId) return;
 
@@ -42,42 +43,47 @@ export const useOrderChat = (orderId: string) => {
     };
   }, [orderId]);
 
+  // Fetch inicial de mensagens
   const fetchMessages = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const { data: messagesData, error: messagesError } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('order_messages')
-        .select('*, attachments:message_attachments(*)')
+        .select(`*, attachments:message_attachments(*)`)
         .eq('order_id', orderId)
         .order('created_at', { ascending: true });
 
-      if (messagesError) throw messagesError;
-      setMessages(messagesData || []);
+      if (fetchError) throw fetchError;
+
+      setMessages(data || []);
     } catch (err) {
-      console.error('Error fetching messages:', err);
+      console.error('Erro ao carregar mensagens:', err);
       setError('Erro ao carregar mensagens');
     } finally {
       setLoading(false);
     }
   };
 
+  // Configura Realtime
   const setupRealtimeSubscription = () => {
-    const subscription = supabase
-      .channel('order-chat')
+    if (channel) supabase.removeChannel(channel);
+
+    const newChannel = supabase
+      .channel(`order-chat:${orderId}`, { config: { broadcast: { self: false } } })
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
         },
         async (payload) => {
           const newMessage = payload.new as ChatMessage;
-          if (newMessage.order_id !== orderId) return;
 
-          // Evita duplicação
+          // Atualiza mensagens sem duplicar
           setMessages((prev) => {
             if (prev.find(msg => msg.id === newMessage.id)) return prev;
             return [...prev, { ...newMessage, attachments: [] }];
@@ -104,11 +110,10 @@ export const useOrderChat = (orderId: string) => {
           event: 'UPDATE',
           schema: 'public',
           table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
         },
         (payload) => {
           const updatedMessage = payload.new as ChatMessage;
-          if (updatedMessage.order_id !== orderId) return;
-
           setMessages((prev) =>
             prev.map(msg =>
               msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
@@ -122,45 +127,24 @@ export const useOrderChat = (orderId: string) => {
           event: 'DELETE',
           schema: 'public',
           table: 'order_messages',
+          filter: `order_id=eq.${orderId}`,
         },
         (payload) => {
           const deletedMessage = payload.old as ChatMessage;
-          if (deletedMessage.order_id !== orderId) return;
-
-          setMessages((prev) =>
-            prev.filter(msg => msg.id !== deletedMessage.id)
-          );
+          setMessages((prev) => prev.filter(msg => msg.id !== deletedMessage.id));
         }
       )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'message_attachments',
-        },
-        async (payload) => {
-          const newAttachment = payload.new as MessageAttachment;
-
-          setMessages((prev) =>
-            prev.map(msg => {
-              if (msg.id === newAttachment.message_id) {
-                return {
-                  ...msg,
-                  attachments: [...(msg.attachments || []), newAttachment],
-                };
-              }
-              return msg;
-            })
-          );
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log(`Conectado ao canal order-chat:${orderId}`);
         }
-      )
-      .subscribe();
+      });
 
-    setChannel(subscription);
-    return subscription;
+    setChannel(newChannel);
+    return newChannel;
   };
 
+  // Envia mensagem
   const sendMessage = async (messageText: string, files?: File[]) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -186,20 +170,35 @@ export const useOrderChat = (orderId: string) => {
 
       if (messageError) throw messageError;
 
-      // Upload arquivos se houver
-      if (files && files.length > 0) {
-        await uploadAttachments(messageData.id, files);
+      const newMessage: ChatMessage = { ...messageData, attachments: [], is_edited: false };
+
+      setMessages((prev) => [...prev, newMessage]); // mostra imediatamente
+
+      // Upload de arquivos
+      if (files?.length) {
+        await uploadAttachments(newMessage.id, files);
+        const { data: attachments } = await supabase
+          .from('message_attachments')
+          .select('*')
+          .eq('message_id', newMessage.id);
+
+        setMessages((prev) =>
+          prev.map(msg =>
+            msg.id === newMessage.id ? { ...msg, attachments: attachments || [] } : msg
+          )
+        );
       }
 
       return { success: true };
     } catch (err) {
-      console.error('Error sending message:', err);
+      console.error('Erro ao enviar mensagem:', err);
       return { success: false, error: 'Erro ao enviar mensagem' };
     }
   };
 
+  // Upload de anexos
   const uploadAttachments = async (messageId: string, files: File[]) => {
-    const uploadPromises = files.map(async (file) => {
+    const promises = files.map(async (file) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${orderId}/${messageId}/${fileName}`;
@@ -207,11 +206,9 @@ export const useOrderChat = (orderId: string) => {
       const { error: uploadError } = await supabase.storage
         .from('chat-attachments')
         .upload(filePath, file, { cacheControl: '3600', upsert: false });
-
       if (uploadError) throw uploadError;
 
-      const { error: dbError } = await supabase
-        .from('message_attachments')
+      const { error: dbError } = await supabase.from('message_attachments')
         .insert({
           message_id: messageId,
           file_name: file.name,
@@ -219,13 +216,13 @@ export const useOrderChat = (orderId: string) => {
           file_size: file.size,
           file_type: file.type,
         });
-
       if (dbError) throw dbError;
     });
 
-    await Promise.all(uploadPromises);
+    await Promise.all(promises);
   };
 
+  // Recupera URL do attachment
   const getAttachmentUrl = async (filePath: string) => {
     try {
       const { data } = await supabase.storage
@@ -233,22 +230,22 @@ export const useOrderChat = (orderId: string) => {
         .createSignedUrl(filePath, 3600);
       return data?.signedUrl || null;
     } catch (err) {
-      console.error('Error getting attachment URL:', err);
+      console.error('Erro ao gerar URL do arquivo:', err);
       return null;
     }
   };
 
+  // Deleta mensagem
   const deleteMessage = async (messageId: string) => {
     try {
-      const { error } = await supabase
-        .from('order_messages')
+      const { error } = await supabase.from('order_messages')
         .delete()
         .eq('id', messageId);
-
       if (error) throw error;
+      setMessages((prev) => prev.filter(msg => msg.id !== messageId));
       return true;
     } catch (err) {
-      console.error('Error deleting message:', err);
+      console.error('Erro ao deletar mensagem:', err);
       return false;
     }
   };
