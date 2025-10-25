@@ -55,7 +55,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUserRole(null);
     setIsAdmin(false);
   }
-      setLoading(false);
 };
 
     const getInitialSession = async () => {
