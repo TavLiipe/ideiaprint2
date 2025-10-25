@@ -43,6 +43,7 @@ const Settings: React.FC = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const { isAdmin, loading } = useAuth();
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -242,6 +243,11 @@ const Settings: React.FC = () => {
       }
     }
   };
+
+
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
 
   if (!isAdmin) { return ( <div className="flex items-center justify-center h-full"> <p className="text-gray-500">Acesso negado. Apenas administradores podem acessar as configurações.</p> </div> ); }
 
