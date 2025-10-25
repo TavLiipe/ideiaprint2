@@ -8,7 +8,8 @@ import {
   Package,
   Calendar,
   AlertCircle,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 
 interface OrderFormProps {
@@ -39,6 +40,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
   const [statuses, setStatuses] = useState<OrderStatus[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [showClientSuggestions, setShowClientSuggestions] = useState(false);
+  const [showServiceOrderConfirm, setShowServiceOrderConfirm] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     client_search: '',
     service: '',
@@ -114,6 +117,25 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
     client.name.toLowerCase().includes(formData.client_search.toLowerCase())
   );
 
+  const handleServiceOrderYes = async () => {
+    if (createdOrderId) {
+      await supabase
+        .from('orders')
+        .update({ service_order_status: 'registrada' })
+        .eq('id', createdOrderId);
+    }
+
+    window.open('https://www.example.com/registro-os', '_blank');
+
+    onSave();
+    onClose();
+  };
+
+  const handleServiceOrderNo = () => {
+    onSave();
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -138,7 +160,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
         return;
       }
 
-      const { error: insertError } = await supabase
+      const { data: newOrder, error: insertError } = await supabase
         .from('orders')
         .insert([{
           client_id: selectedClientId,
@@ -147,18 +169,57 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
           delivery_date: deliveryDateTime,
           employee_id: user.id,
           created_by: user.id,
-          status_id: formData.status_id
-        }]);
+          status_id: formData.status_id,
+          service_order_status: 'pendente'
+        }])
+        .select()
+        .single();
 
       if (insertError) throw insertError;
 
-      onSave();
-      onClose();
+      setCreatedOrderId(newOrder?.id || null);
+      setShowServiceOrderConfirm(true);
     } catch (error: any) {
       console.error('Error creating order:', error);
       setError(`Erro ao criar pedido: ${error.message || 'Tente novamente.'}`);
     }
   };
+
+  if (showServiceOrderConfirm) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Package className="w-8 h-8 text-orange-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Pedido Criado com Sucesso!
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Deseja registrar a Ordem de Serviço agora?
+            </p>
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              onClick={handleServiceOrderNo}
+              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+            >
+              Não
+            </button>
+            <button
+              onClick={handleServiceOrderYes}
+              className="flex-1 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
+            >
+              <ExternalLink className="w-5 h-5 mr-2" />
+              Sim
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

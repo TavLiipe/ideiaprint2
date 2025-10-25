@@ -13,6 +13,7 @@ interface Order {
   description?: string;
   status: string;
   status_id: string | null;
+  service_order_status?: string;
   delivery_date: string;
   created_at: string;
   creator_email: string;
@@ -190,6 +191,9 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                     Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    OS
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Criado por
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -259,6 +263,15 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                           </div>
                         )}
                       </div>
+                    </td>
+                    <td className="px-6 py-6 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                        order.service_order_status === 'registrada'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+                      }`}>
+                        {order.service_order_status === 'registrada' ? 'Registrada' : 'Pendente'}
+                      </span>
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                       {order.creator_email}
