@@ -12,6 +12,9 @@ const Login = () => {
   const [showCreateAdmin, setShowCreateAdmin] = useState(false);
   const [createAdminLoading, setCreateAdminLoading] = useState(false);
   const [createAdminSuccess, setCreateAdminSuccess] = useState('');
+  const [newAdminUsername, setNewAdminUsername] = useState('admin');
+  const [newAdminPassword, setNewAdminPassword] = useState('admin123');
+  const [newAdminFullName, setNewAdminFullName] = useState('Administrador');
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -41,6 +44,12 @@ const Login = () => {
     setCreateAdminSuccess('');
     setCreateAdminLoading(true);
 
+    if (!newAdminUsername.trim() || !newAdminPassword.trim() || !newAdminFullName.trim()) {
+      setError('Todos os campos são obrigatórios');
+      setCreateAdminLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-admin`,
@@ -51,10 +60,10 @@ const Login = () => {
             'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
           },
           body: JSON.stringify({
-            username: 'admin',
-            full_name: 'Administrador',
-            email: 'admin@internal.local',
-            password: 'admin123'
+            username: newAdminUsername,
+            full_name: newAdminFullName,
+            email: `${newAdminUsername}@internal.local`,
+            password: newAdminPassword
           })
         }
       );
@@ -62,8 +71,11 @@ const Login = () => {
       const data = await response.json();
 
       if (data.success) {
-        setCreateAdminSuccess(`Usuário criado com sucesso! Username: ${data.username}, Senha: admin123`);
+        setCreateAdminSuccess(`Usuário criado com sucesso! Username: ${data.username}`);
         setShowCreateAdmin(false);
+        setNewAdminUsername('admin');
+        setNewAdminPassword('admin123');
+        setNewAdminFullName('Administrador');
       } else {
         setError(data.error || 'Erro ao criar usuário');
       }
@@ -208,23 +220,66 @@ const Login = () => {
             ) : (
               <div className="space-y-3">
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                  <p className="text-sm text-blue-900 font-medium mb-2">Criar usuário administrador?</p>
-                  <p className="text-xs text-blue-700 mb-3">
-                    Username: <span className="font-mono bg-white px-2 py-1 rounded">admin</span><br/>
-                    Senha: <span className="font-mono bg-white px-2 py-1 rounded">admin123</span>
-                  </p>
-                  <div className="flex space-x-2">
+                  <p className="text-sm text-blue-900 font-semibold mb-3">Criar usuário administrador</p>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Nome Completo
+                      </label>
+                      <input
+                        type="text"
+                        value={newAdminFullName}
+                        onChange={(e) => setNewAdminFullName(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Administrador"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Nome de Usuário
+                      </label>
+                      <input
+                        type="text"
+                        value={newAdminUsername}
+                        onChange={(e) => setNewAdminUsername(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: admin"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Senha
+                      </label>
+                      <input
+                        type="password"
+                        value={newAdminPassword}
+                        onChange={(e) => setNewAdminPassword(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Digite a senha"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2 mt-4">
                     <button
                       type="button"
                       onClick={handleCreateAdmin}
                       disabled={createAdminLoading}
                       className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
                     >
-                      {createAdminLoading ? 'Criando...' : 'Confirmar'}
+                      {createAdminLoading ? 'Criando...' : 'Criar Usuário'}
                     </button>
                     <button
                       type="button"
-                      onClick={() => setShowCreateAdmin(false)}
+                      onClick={() => {
+                        setShowCreateAdmin(false);
+                        setNewAdminUsername('admin');
+                        setNewAdminPassword('admin123');
+                        setNewAdminFullName('Administrador');
+                      }}
                       disabled={createAdminLoading}
                       className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition-all"
                     >
