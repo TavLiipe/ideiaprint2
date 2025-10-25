@@ -6,6 +6,7 @@ import Reports from './Reports';
 import Calendar from './Calendar';
 import Settings from './Settings';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   LogOut,
   Menu,
@@ -21,7 +22,9 @@ import {
   Calendar as CalendarIcon,
   Search,
   Bell,
-  Archive
+  Archive,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -45,6 +48,7 @@ interface Order {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState('dashboard');
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -146,20 +150,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
+        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white dark:bg-gray-800 shadow-xl transition-colors duration-200">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">IP</span>
               </div>
-              <span className="text-lg font-bold text-gray-900">Ideia Print</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">Ideia Print</span>
             </div>
             <button onClick={() => setSidebarOpen(false)}>
-              <X className="w-6 h-6 text-gray-500" />
+              <X className="w-6 h-6 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
           <nav className="flex-1 px-4 py-4 space-y-2">
@@ -168,7 +172,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'dashboard' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Home className="w-5 h-5 mr-3" />
@@ -179,7 +183,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'orders' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Package className="w-5 h-5 mr-3" />
@@ -190,7 +194,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'new-order' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Plus className="w-5 h-5 mr-3" />
@@ -198,14 +202,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </button>
             
             {/* Divider */}
-            <div className="border-t border-gray-200 my-4"></div>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
             
             <button
               onClick={() => handleViewChange('calendar')}
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'calendar'
                   ? 'text-orange-700 bg-orange-100'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <CalendarIcon className="w-5 h-5 mr-3" />
@@ -217,7 +221,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'reports' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <BarChart3 className="w-5 h-5 mr-3" />
@@ -225,14 +229,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </button>
             
             {/* Divider */}
-            <div className="border-t border-gray-200 my-4"></div>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
             
             <button
               onClick={() => handleViewChange('search')}
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'search' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Search className="w-5 h-5 mr-3" />
@@ -244,7 +248,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'notifications' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Bell className="w-5 h-5 mr-3" />
@@ -256,7 +260,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'archive' 
                   ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Archive className="w-5 h-5 mr-3" />
@@ -264,14 +268,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </button>
             
             {/* Divider */}
-            <div className="border-t border-gray-200 my-4"></div>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
 
             <button
               onClick={() => handleViewChange('settings')}
               className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                 currentView === 'settings'
                   ? 'text-orange-700 bg-orange-100'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <SettingsIcon className="w-5 h-5 mr-3" />
@@ -280,7 +284,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
             <button
               onClick={handleSignOut}
-              className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors text-red-700 hover:bg-red-100`}
+              className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/20`}
             >
               <LogOut className="w-5 h-5 mr-3" />
               Sair
@@ -291,7 +295,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-20 lg:flex-col">
-        <div className="flex flex-col flex-grow bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl rounded-r-3xl">
+        <div className="flex flex-col flex-grow bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 shadow-xl rounded-r-3xl transition-colors duration-200">
           {/* Logo */}
           <div className="flex items-center justify-center h-20 pt-6">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
@@ -306,11 +310,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'dashboard' 
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <Home className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Dashboard
               </div>
             </button>
@@ -320,11 +324,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'orders' 
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <Package className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Pedidos
               </div>
             </button>
@@ -334,11 +338,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'new-order' 
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <Plus className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Novo Pedido
               </div>
             </button>
@@ -351,11 +355,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'calendar'
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <CalendarIcon className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Agenda
               </div>
             </button>
@@ -365,11 +369,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'reports' 
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <BarChart3 className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Relatórios
               </div>
             </button>
@@ -382,20 +386,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
                 currentView === 'settings'
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-orange-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
               }`}
             >
               <SettingsIcon className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Configurações
               </div>
             </button>
             <button
               onClick={handleSignOut}
-              className="group relative flex items-center justify-center w-14 h-14 rounded-2xl text-gray-600 hover:bg-red-50 hover:text-red-500 transition-all duration-300"
+              className="group relative flex items-center justify-center w-14 h-14 rounded-2xl text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 transition-all duration-300"
             >
               <LogOut className="w-6 h-6" />
-              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Sair
               </div>
             </button>
@@ -406,7 +410,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Main content */}
       <div className="lg:pl-20">
         {/* Top bar - Desktop */}
-        <div className="hidden lg:flex items-center justify-end h-16 px-6 bg-white border-b border-gray-200">
+        <div className="hidden lg:flex items-center justify-end h-16 px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
           <div className="flex items-center space-x-4">
             {user && (
               <div className="flex items-center space-x-3">
@@ -414,15 +418,23 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <div className="text-sm">
-                  <p className="font-medium text-gray-900">{user.email}</p>
-                  <p className="text-gray-500">Usuário logado</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{user.email}</p>
+                  <p className="text-gray-500 dark:text-gray-400">Usuário logado</p>
                 </div>
               </div>
             )}
-            <div className="h-6 w-px bg-gray-300"></div>
+            <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+            <button
+              onClick={toggleTheme}
+              className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+              title={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
+              {theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
+            </button>
             <button
               onClick={handleSignOut}
-              className="inline-flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Sair
@@ -431,11 +443,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </div>
 
         {/* Top bar */}
-        <div className="sticky top-0 z-40 bg-white border-b border-gray-200 lg:hidden">
+        <div className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 lg:hidden transition-colors duration-200">
           <div className="flex items-center justify-between h-16 px-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -445,7 +457,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 alt="Ideia Print Logo"
                 className="w-8 h-8 object-contain rounded-lg"
               />
-              <span className="text-lg font-bold text-gray-900">Ideia Print</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">Ideia Print</span>
             </div>
             <div className="flex items-center space-x-2">
               {user && (
@@ -453,12 +465,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                     <User className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-sm font-medium text-gray-700 hidden sm:block">{user.email}</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">{user.email}</span>
                 </div>
               )}
               <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                title={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button
                 onClick={handleSignOut}
-                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
               >
                 <LogOut className="w-5 h-5" />
               </button>
