@@ -290,21 +290,27 @@ const OrderForm: React.FC<OrderFormProps> = ({ onClose, onSave }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Hora de Entrega
-                  </label>
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
-                    <input
-                      type="time"
-                      name="delivery_time"
-                      value={formData.delivery_time}
-                      onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    />
-                  </div>
-                </div>
-              </div>
+  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+    Hora de Entrega
+  </label>
+  <div className="relative">
+    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
+    <select
+      name="delivery_time"
+      value={formData.delivery_time}
+      onChange={handleChange}
+      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+    >
+      {/* Gerar horários de 9:00 até 18:00 de 30 em 30 minutos */}
+      {Array.from({ length: 19 }, (_, i) => i + 9).flatMap(hour => {
+        const h = hour.toString().padStart(2, '0');
+        return [`${h}:00`, `${h}:30`];
+      }).map(time => (
+        <option key={time} value={time}>{time}</option>
+      ))}
+    </select>
+  </div>
+</div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
