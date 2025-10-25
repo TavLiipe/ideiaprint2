@@ -31,7 +31,7 @@ interface UserAccount {
 }
 
 type TabType = 'clients' | 'statuses' | 'users';
-const { isAdmin, loading } = useAuth();
+
 const Settings: React.FC = () => {
   const { userRole, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('clients');
