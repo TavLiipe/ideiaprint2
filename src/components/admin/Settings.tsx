@@ -243,14 +243,6 @@ const Settings: React.FC = () => {
     }
   };
 
-  if (!isAdmin) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-gray-500">Acesso negado. Apenas administradores podem acessar as configurações.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="h-full flex flex-col">
       <div className="bg-white border-b px-6 py-4">
