@@ -33,19 +33,26 @@ interface UserAccount {
 type TabType = 'clients' | 'statuses' | 'users';
 
 const Settings: React.FC = () => {
-  const { userRole, isAdmin } = useAuth();
+  const { userRole, isAdmin, user } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('clients');
   const [clients, setClients] = useState<Client[]>([]);
   const [statuses, setStatuses] = useState<OrderStatus[]>([]);
   const [users, setUsers] = useState<UserAccount[]>([]);
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [showClientModal, setShowClientModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
 
   useEffect(() => {
-    if (!isAdmin) return;
+    if (user !== null) {
+      setAuthLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!isAdmin || authLoading) return;
 
     if (activeTab === 'clients') {
       fetchClients();
@@ -54,7 +61,7 @@ const Settings: React.FC = () => {
     } else if (activeTab === 'users') {
       fetchUsers();
     }
-  }, [activeTab, isAdmin]);
+  }, [activeTab, isAdmin, authLoading]);
 
   const fetchClients = async () => {
     setLoading(true);
@@ -243,12 +250,24 @@ const Settings: React.FC = () => {
     }
   };
 
-
-  if (loading) {
-    return <p>Carregando...</p>;
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (!isAdmin) { return ( <div className="flex items-center justify-center h-full"> <p className="text-gray-500">Acesso negado. Apenas administradores podem acessar as configurações.</p> </div> ); }
+  if (!isAdmin) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-gray-500">Acesso negado. Apenas administradores podem acessar as configurações.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col">
