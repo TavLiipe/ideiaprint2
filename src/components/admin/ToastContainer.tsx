@@ -42,6 +42,42 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ onNotificationClick }) 
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
+  useEffect(() => {
+  // Subscrição Realtime para novas notificações
+  const subscription = supabase
+    .channel('notifications-realtime')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'notifications' },
+      (payload) => {
+        const newNotification = payload.new;
+
+        // Adiciona o toast imediatamente
+        setToasts((prev) => [
+          ...prev,
+          {
+            id: newNotification.id,
+            type: newNotification.type,
+            message: newNotification.message?.message || 'Nova mensagem',
+            orderName: newNotification.order
+              ? `${newNotification.order.client_name} - ${newNotification.order.service}`
+              : undefined,
+            userName: newNotification.message?.user_name,
+            onClose: () => removeToast(newNotification.id),
+            onClick: onNotificationClick
+              ? () => onNotificationClick(newNotification.order_id)
+              : undefined,
+          },
+        ]);
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(subscription);
+  };
+}, [onNotificationClick]);
+
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
       <div className="space-y-2 pointer-events-auto">
