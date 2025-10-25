@@ -264,8 +264,9 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                       {order.creator_email}
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-  {format(new Date(order.delivery_date), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
-                    </td> 
+  Data: {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })} / 
+  Hora: {format(new Date(order.delivery_date), 'HH:mm', { locale: ptBR })}
+                    </td>
                     <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {format(new Date(order.created_at), 'dd/MM/yyyy', { locale: ptBR })}
                     </td>
