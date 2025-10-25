@@ -5,10 +5,17 @@ import { useOrderFollowers } from '../../hooks/useOrderFollowers';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDropzone } from 'react-dropzone';
+import { supabase } from '../../lib/supabase';
 
 interface OrderChatProps {
   orderId: string;
   currentUserId: string;
+}
+
+interface Employee {
+  user_id: string;
+  username: string;
+  full_name: string;
 }
 
 const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
@@ -17,6 +24,13 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionSearch, setMentionSearch] = useState('');
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
+  const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState(0);
 
   const {
     messages,
@@ -58,6 +72,39 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    if (mentionSearch) {
+      const filtered = employees.filter(emp =>
+        emp.full_name.toLowerCase().includes(mentionSearch.toLowerCase()) ||
+        emp.username.toLowerCase().includes(mentionSearch.toLowerCase())
+      );
+      setFilteredEmployees(filtered);
+      setSelectedMentionIndex(0);
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [mentionSearch, employees]);
+
+  const fetchEmployees = async () => {
+    try {
+      const { data } = await supabase
+        .from('user_roles')
+        .select('user_id, username, full_name')
+        .eq('is_active', true)
+        .order('full_name');
+
+      if (data) {
+        setEmployees(data);
+      }
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -80,8 +127,76 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
     setSending(false);
   };
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    const cursorPos = e.target.selectionStart;
+    setMessageText(value);
+    setCursorPosition(cursorPos);
+
+    const textBeforeCursor = value.slice(0, cursorPos);
+    const atIndex = textBeforeCursor.lastIndexOf('@');
+
+    if (atIndex !== -1) {
+      const textAfterAt = textBeforeCursor.slice(atIndex + 1);
+      const hasSpace = textAfterAt.includes(' ');
+
+      if (!hasSpace) {
+        setMentionSearch(textAfterAt);
+        setShowMentions(true);
+      } else {
+        setShowMentions(false);
+      }
+    } else {
+      setShowMentions(false);
+    }
+  };
+
+  const insertMention = (employee: Employee) => {
+    const textBeforeCursor = messageText.slice(0, cursorPosition);
+    const textAfterCursor = messageText.slice(cursorPosition);
+    const atIndex = textBeforeCursor.lastIndexOf('@');
+
+    const newText =
+      messageText.slice(0, atIndex) +
+      `@${employee.username} ` +
+      textAfterCursor;
+
+    setMessageText(newText);
+    setShowMentions(false);
+    setMentionSearch('');
+
+    setTimeout(() => {
+      if (textareaRef.current) {
+        const newCursorPos = atIndex + employee.username.length + 2;
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (showMentions) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedMentionIndex(prev =>
+          prev < filteredEmployees.length - 1 ? prev + 1 : prev
+        );
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedMentionIndex(prev => prev > 0 ? prev - 1 : 0);
+      } else if (e.key === 'Enter' || e.key === 'Tab') {
+        e.preventDefault();
+        if (filteredEmployees[selectedMentionIndex]) {
+          insertMention(filteredEmployees[selectedMentionIndex]);
+        }
+        return;
+      } else if (e.key === 'Escape') {
+        setShowMentions(false);
+        setMentionSearch('');
+      }
+    }
+
+    if (e.key === 'Enter' && !e.shiftKey && !showMentions) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -140,6 +255,40 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
       .join('')
       .toUpperCase()
       .slice(0, 2);
+  };
+
+  const renderMessageWithMentions = (text: string, isOwnMessage: boolean) => {
+    const mentionRegex = /@(\w+)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = mentionRegex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(text.slice(lastIndex, match.index));
+      }
+
+      parts.push(
+        <span
+          key={match.index}
+          className={`font-semibold ${
+            isOwnMessage
+              ? 'text-orange-100 bg-orange-600/30'
+              : 'text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30'
+          } px-1 rounded`}
+        >
+          {match[0]}
+        </span>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
   };
 
   if (loading) {
@@ -276,7 +425,7 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
 
                     {/* Message Text */}
                     <p className="text-sm whitespace-pre-wrap break-words">
-                      {message.message}
+                      {renderMessageWithMentions(message.message, isOwnMessage)}
                     </p>
 
                     {/* Attachments */}
@@ -350,14 +499,47 @@ const OrderChat: React.FC<OrderChatProps> = ({ orderId, currentUserId }) => {
             />
           </label>
 
-          <textarea
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Digite sua mensagem... (Shift+Enter para nova linha)"
-            className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 max-h-32"
-            rows={2}
-          />
+          <div className="flex-1 relative">
+            <textarea
+              ref={textareaRef}
+              value={messageText}
+              onChange={handleTextChange}
+              onKeyDown={handleKeyPress}
+              placeholder="Digite sua mensagem... (use @ para mencionar)"
+              className="w-full resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 max-h-32"
+              rows={2}
+            />
+
+            {showMentions && filteredEmployees.length > 0 && (
+              <div className="absolute bottom-full mb-2 left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50">
+                {filteredEmployees.map((employee, index) => (
+                  <button
+                    key={employee.user_id}
+                    onClick={() => insertMention(employee)}
+                    className={`w-full text-left px-4 py-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors ${
+                      index === selectedMentionIndex
+                        ? 'bg-orange-50 dark:bg-orange-900/20'
+                        : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-semibold">
+                        {employee.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          {employee.full_name}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          @{employee.username}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             onClick={handleSendMessage}
