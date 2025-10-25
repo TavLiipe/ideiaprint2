@@ -67,9 +67,13 @@ export const useOrderChat = (orderId: string) => {
   };
 
   const setupRealtimeSubscription = () => {
+  // Remove canal antigo se existir
+  if (channel) {
+    supabase.removeChannel(channel);
+  }
+
   const newChannel = supabase
-    .channel(`order-chat:${orderId}`)
-    // NOVA MENSAGEM
+    .channel(`order-chat:${orderId}`) // mesmo nome de canal para todos no mesmo chat
     .on(
       'postgres_changes',
       {
@@ -81,14 +85,14 @@ export const useOrderChat = (orderId: string) => {
       (payload) => {
         const newMessage = payload.new as ChatMessage;
 
-        // Atualiza imediatamente a lista de mensagens
+        // Atualiza estado local
         setMessages((prev) => {
           const exists = prev.find(msg => msg.id === newMessage.id);
           if (exists) return prev; // evita duplicatas
           return [...prev, { ...newMessage, attachments: [] }];
         });
 
-        // Busca attachments de forma assíncrona, sem bloquear a atualização da mensagem
+        // Busca attachments em segundo plano
         supabase
           .from('message_attachments')
           .select('*')
@@ -102,38 +106,6 @@ export const useOrderChat = (orderId: string) => {
               );
             }
           });
-      }
-    )
-    // ATUALIZAÇÃO DE MENSAGEM
-    .on(
-      'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'order_messages',
-        filter: `order_id=eq.${orderId}`,
-      },
-      (payload) => {
-        const updatedMessage = payload.new as ChatMessage;
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
-          )
-        );
-      }
-    )
-    // DELEÇÃO DE MENSAGEM
-    .on(
-      'postgres_changes',
-      {
-        event: 'DELETE',
-        schema: 'public',
-        table: 'order_messages',
-        filter: `order_id=eq.${orderId}`,
-      },
-      (payload) => {
-        const deletedMessage = payload.old as ChatMessage;
-        setMessages((prev) => prev.filter((msg) => msg.id !== deletedMessage.id));
       }
     )
     .subscribe();
