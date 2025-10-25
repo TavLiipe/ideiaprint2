@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   } catch (error) {
     console.error('Error fetching user role:', error);
     setUserRole(null);
-    setIsAdmin(false);
+    setIsAdmin(false);setLoading(false);
   }
 };
 
