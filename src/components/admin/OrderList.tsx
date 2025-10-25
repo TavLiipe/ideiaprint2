@@ -266,10 +266,10 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white">
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50 transition-colors duration-150">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={order.id} className="border-b-4 border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                    <td className="px-6 py-6 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">{order.client_name}</div>
                         <div className="text-sm text-gray-500">{order.client_email}</div>
@@ -278,7 +278,7 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-6 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{order.service}</div>
                       {order.description && (
                         <div className="text-sm text-gray-500 truncate max-w-xs">
@@ -286,7 +286,7 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-6 whitespace-nowrap">
                       <div className="relative status-menu-container">
                         <button
                           onClick={() => setStatusMenuOpen(statusMenuOpen === order.id ? null : order.id)}
@@ -323,16 +323,16 @@ const OrderList: React.FC<OrderListProps> = ({ onSelectOrder, onNewOrder }) => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-600">
                       {order.creator_email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-900">
                       {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-500">
                       {format(new Date(order.created_at), 'dd/MM/yyyy', { locale: ptBR })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-6 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => onSelectOrder(order)}
                         className="text-orange-600 hover:text-orange-900 mr-3"
