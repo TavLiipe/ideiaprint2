@@ -1,9 +1,68 @@
-    order.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
+import React, { useState, useEffect } from 'react';
+import { Search, Plus, Eye, Clock, CheckCircle, XCircle, Package } from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { supabase } from '../../lib/supabase';
+
+interface Order {
+  id: string;
+  client_name: string;
+  client_email: string;
+  client_company?: string;
+  service: string;
+  description?: string;
+  status: string;
+  delivery_date: string;
+  created_at: string;
+  creator_email: string;
+}
+
+interface OrderListProps {
+  orders: Order[];
+  onSelectOrder: (order: Order) => void;
+  onNewOrder: () => void;
+  onRefresh: () => void;
+}
+
+const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder, onRefresh }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
+  const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
+
+  useEffect(() => {
+    filterOrders();
+  }, [orders, searchTerm, statusFilter]);
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      setStatusMenuOpen(null);
+      onRefresh();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Erro ao atualizar status do pedido');
+    }
+  };
+
+  const filterOrders = () => {
+    let filtered = orders;
+
+    if (searchTerm) {
+      filtered = filtered.filter(order =>
+        order.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.client_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (order.client_company && order.client_company.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
-    // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter(order => order.status === statusFilter);
     }
@@ -101,7 +160,7 @@
             <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum pedido encontrado</h3>
             <p className="text-gray-600">
-              {searchTerm || statusFilter !== 'all' 
+              {searchTerm || statusFilter !== 'all'
                 ? 'Tente ajustar os filtros de busca'
                 : 'Comece criando seu primeiro pedido'
               }
