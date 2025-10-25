@@ -58,6 +58,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orderEditMode, setOrderEditMode] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
@@ -97,12 +98,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleSelectOrder = (order: Order) => {
     setSelectedOrder(order);
+    setOrderEditMode(false);
+  };
+
+  const handleEditOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setOrderEditMode(true);
   };
 
   const handleNotificationClick = (orderId: string) => {
     const order = orders.find((o) => o.id === orderId);
     if (order) {
       setSelectedOrder(order);
+      setOrderEditMode(false);
       setCurrentView('orders');
     }
   };
@@ -113,6 +121,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleCloseOrderDetail = () => {
     setSelectedOrder(null);
+    setOrderEditMode(false);
   };
 
   const handleOrderSaved = () => {
@@ -128,6 +137,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <OrderList
             orders={orders}
             onSelectOrder={handleSelectOrder}
+            onEditOrder={handleEditOrder}
             onNewOrder={handleNewOrder}
             onRefresh={fetchOrders}
           />
@@ -541,6 +551,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           order={selectedOrder}
           onClose={handleCloseOrderDetail}
           onUpdate={handleOrderSaved}
+          startInEditMode={orderEditMode}
         />
       )}
 

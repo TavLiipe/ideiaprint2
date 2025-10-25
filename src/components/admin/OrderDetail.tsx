@@ -77,10 +77,11 @@ interface OrderDetailProps {
   order: Order;
   onClose: () => void;
   onUpdate: () => void;
+  startInEditMode?: boolean;
 }
 
-const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) => {
-  const [editing, setEditing] = useState(false);
+const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate, startInEditMode = false }) => {
+  const [editing, setEditing] = useState(startInEditMode);
   const [files, setFiles] = useState<OrderFile[]>([]);
   const [history, setHistory] = useState<OrderHistory[]>([]);
   const [uploadingFiles, setUploadingFiles] = useState(false);

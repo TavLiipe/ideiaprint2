@@ -29,11 +29,12 @@ interface OrderStatus {
 interface OrderListProps {
   orders: Order[];
   onSelectOrder: (order: Order) => void;
+  onEditOrder: (order: Order) => void;
   onNewOrder: () => void;
   onRefresh: () => void;
 }
 
-const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder, onRefresh }) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrder, onNewOrder, onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
@@ -278,7 +279,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onNewOrder
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => onSelectOrder(order)}
+                          onClick={() => onEditOrder(order)}
                           className="p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors"
                           title="Editar pedido"
                         >
