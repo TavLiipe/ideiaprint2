@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogIn, Eye, EyeOff, AlertCircle, User, Lock } from 'lucide-react';
+import { LogIn, Eye, EyeOff, AlertCircle, User, Lock, UserPlus } from 'lucide-react';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +9,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showCreateAdmin, setShowCreateAdmin] = useState(false);
+  const [createAdminLoading, setCreateAdminLoading] = useState(false);
+  const [createAdminSuccess, setCreateAdminSuccess] = useState('');
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -25,12 +28,50 @@ const Login = () => {
     setLoading(true);
 
     const { error } = await signIn(username, password);
-    
+
     if (error) {
       setError(error?.message || 'Usuário ou senha inválidos');
     }
-    
+
     setLoading(false);
+  };
+
+  const handleCreateAdmin = async () => {
+    setError('');
+    setCreateAdminSuccess('');
+    setCreateAdminLoading(true);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-admin`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            username: 'admin',
+            full_name: 'Administrador',
+            email: 'admin@internal.local',
+            password: 'admin123'
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setCreateAdminSuccess(`Usuário criado com sucesso! Username: ${data.username}, Senha: admin123`);
+        setShowCreateAdmin(false);
+      } else {
+        setError(data.error || 'Erro ao criar usuário');
+      }
+    } catch (err) {
+      setError('Erro ao conectar com o servidor');
+    } finally {
+      setCreateAdminLoading(false);
+    }
   };
 
   return (
@@ -75,6 +116,13 @@ const Login = () => {
               <div className="flex items-center space-x-3 p-4 bg-red-50 border border-red-200 rounded-xl">
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                 <span className="text-red-700 text-sm">{error}</span>
+              </div>
+            )}
+
+            {createAdminSuccess && (
+              <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+                <AlertCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <span className="text-green-700 text-sm">{createAdminSuccess}</span>
               </div>
             )}
 
@@ -146,6 +194,46 @@ const Login = () => {
                 </div>
               )}
             </button>
+
+            {/* Create Admin Button */}
+            {!showCreateAdmin ? (
+              <button
+                type="button"
+                onClick={() => setShowCreateAdmin(true)}
+                className="w-full flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all duration-200"
+              >
+                <UserPlus className="w-5 h-5 mr-2" />
+                <span>Criar Primeiro Admin</span>
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <p className="text-sm text-blue-900 font-medium mb-2">Criar usuário administrador?</p>
+                  <p className="text-xs text-blue-700 mb-3">
+                    Username: <span className="font-mono bg-white px-2 py-1 rounded">admin</span><br/>
+                    Senha: <span className="font-mono bg-white px-2 py-1 rounded">admin123</span>
+                  </p>
+                  <div className="flex space-x-2">
+                    <button
+                      type="button"
+                      onClick={handleCreateAdmin}
+                      disabled={createAdminLoading}
+                      className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+                    >
+                      {createAdminLoading ? 'Criando...' : 'Confirmar'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateAdmin(false)}
+                      disabled={createAdminLoading}
+                      className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition-all"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </form>
 
           {/* Footer */}
