@@ -306,12 +306,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Detalhes do Pedido</h2>
-            <p className="text-sm text-gray-500">ID: {order.id.slice(0, 8)}</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Detalhes do Pedido</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">ID: {order.id.slice(0, 8)}</p>
           </div>
           <div className="flex items-center space-x-2">
             {!editing && (
@@ -335,12 +335,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
           {/* Status and Dates */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
               {editing ? (
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as any }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
                   <option value="em_producao">Em Produção</option>
                   <option value="finalizado">Finalizado</option>
@@ -354,28 +354,28 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Data de Entrega</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Data de Entrega</label>
               {editing ? (
                 <input
                   type="date"
                   value={formData.delivery_date}
                   onChange={(e) => setFormData(prev => ({ ...prev, delivery_date: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 />
               ) : (
-                <p className="text-gray-900">{format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}</p>
+                <p className="text-gray-900 dark:text-white">{format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}</p>
               )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Criado em</label>
-              <p className="text-gray-900">{format(new Date(order.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Criado em</label>
+              <p className="text-gray-900 dark:text-white">{format(new Date(order.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
             </div>
           </div>
 
           {/* Client Information */}
-          <div className="bg-gray-50 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <User className="w-5 h-5 mr-2 text-orange-500" />
               Informações do Cliente
             </h3>
@@ -383,30 +383,30 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
               <div className="flex items-center space-x-3">
                 <User className="w-4 h-4 text-gray-400" />
                 <div>
-                  <p className="text-sm text-gray-500">Nome</p>
-                  <p className="font-medium text-gray-900">{order.client_name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Nome</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{order.client_name}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-gray-400" />
                 <div>
-                  <p className="text-sm text-gray-500">E-mail</p>
-                  <p className="font-medium text-gray-900">{order.client_email}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">E-mail</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{order.client_email}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-gray-400" />
                 <div>
-                  <p className="text-sm text-gray-500">Telefone</p>
-                  <p className="font-medium text-gray-900">{order.client_phone}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Telefone</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{order.client_phone}</p>
                 </div>
               </div>
               {order.client_company && (
                 <div className="flex items-center space-x-3">
                   <Building className="w-4 h-4 text-gray-400" />
                   <div>
-                    <p className="text-sm text-gray-500">Empresa</p>
-                    <p className="font-medium text-gray-900">{order.client_company}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Empresa</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{order.client_company}</p>
                   </div>
                 </div>
               )}
@@ -415,27 +415,27 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
           {/* Service Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <Package className="w-5 h-5 mr-2 text-orange-500" />
               Informações do Serviço
             </h3>
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-500">Serviço</p>
-                <p className="font-medium text-gray-900">{order.service}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Serviço</p>
+                <p className="font-medium text-gray-900 dark:text-white">{order.service}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Descrição</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Descrição</p>
                 {editing ? (
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Descrição do projeto..."
                   />
                 ) : (
-                  <p className="text-gray-900">{order.description || 'Nenhuma descrição fornecida'}</p>
+                  <p className="text-gray-900 dark:text-white">{order.description || 'Nenhuma descrição fornecida'}</p>
                 )}
               </div>
             </div>
@@ -443,7 +443,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
           {/* Files Section */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <File className="w-5 h-5 mr-2 text-orange-500" />
               Arquivos ({files.length})
             </h3>
@@ -452,7 +452,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             <div
               {...getRootProps()}
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                isDragActive ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:border-orange-400'
+                isDragActive ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-gray-300 dark:border-gray-600 hover:border-orange-400'
               }`}
             >
               <input {...getInputProps()} />
@@ -464,10 +464,10 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
               ) : (
                 <div>
                   <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">
+                  <p className="text-gray-600 dark:text-gray-400 mb-2">
                     {isDragActive ? 'Solte os arquivos aqui' : 'Arraste arquivos ou clique para selecionar'}
                   </p>
-                  <p className="text-sm text-gray-500">Máximo 50MB por arquivo</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Máximo 50MB por arquivo</p>
                 </div>
               )}
             </div>
@@ -476,12 +476,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
             {files.length > 0 && (
               <div className="mt-6 space-y-3">
                 {files.map((file) => (
-                  <div key={file.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div key={file.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <div className="flex items-center space-x-3">
                       <File className="w-5 h-5 text-gray-400" />
                       <div>
-                        <p className="font-medium text-gray-900">{file.file_name}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-medium text-gray-900 dark:text-white">{file.file_name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                           {formatFileSize(file.file_size)} • {format(new Date(file.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                         </p>
                       </div>
@@ -509,31 +509,31 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
           {/* History Section */}
           {history.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <History className="w-5 h-5 mr-2 text-orange-500" />
                 Histórico de Alterações
               </h3>
               <div className="space-y-3">
                 {history.map((entry) => (
-                  <div key={entry.id} className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                  <div key={entry.id} className="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <Clock className="w-4 h-4 text-gray-400 mt-0.5" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           {entry.field_name === 'status' && 'Status alterado'}
                           {entry.field_name === 'description' && 'Descrição alterada'}
                           {entry.field_name === 'delivery_date' && 'Data de entrega alterada'}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           {format(new Date(entry.changed_at), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                         </p>
                       </div>
-                      <p className="text-sm text-gray-600 mb-1">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                         <span className="text-red-600 line-through">{entry.old_value}</span>
                         {' → '}
                         <span className="text-green-600 font-medium">{entry.new_value}</span>
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Alterado por: {entry.changer_email}
                       </p>
                     </div>
@@ -545,7 +545,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order, onClose, onUpdate }) =
 
           {/* Actions */}
           {editing && (
-            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => setEditing(false)}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"

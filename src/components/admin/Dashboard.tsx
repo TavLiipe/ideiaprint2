@@ -127,86 +127,86 @@ const Dashboard = () => {
     <div className="space-y-8">
       {/* Welcome */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Bem-vindo ao Painel!
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
           Aqui está um resumo das atividades da Ideia Print
         </p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total de Pedidos</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalOrders}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total de Pedidos</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalOrders}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Package className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <Package className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Em Produção</p>
-              <p className="text-3xl font-bold text-yellow-600">{stats.inProduction}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Em Produção</p>
+              <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-500">{stats.inProduction}</p>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-yellow-600" />
+            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+              <Clock className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Finalizados</p>
-              <p className="text-3xl font-bold text-green-600">{stats.completed}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Finalizados</p>
+              <p className="text-3xl font-bold text-green-600 dark:text-green-500">{stats.completed}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Arquivos</p>
-              <p className="text-3xl font-bold text-purple-600">{stats.totalFiles}</p>
-              <p className="text-xs text-gray-500">{formatFileSize(stats.storageUsed)}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Arquivos</p>
+              <p className="text-3xl font-bold text-orange-600 dark:text-orange-500">{stats.totalFiles}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{formatFileSize(stats.storageUsed)}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <FileText className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+              <FileText className="w-6 h-6 text-orange-600 dark:text-orange-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Pedidos Recentes</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Pedidos Recentes</h2>
         </div>
         <div className="p-6">
           {recentOrders.length === 0 ? (
             <div className="text-center py-8">
-              <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 mb-2">Nenhum pedido encontrado</p>
-              <p className="text-sm text-gray-400">Os pedidos aparecerão aqui quando forem criados</p>
+              <Package className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 mb-2">Nenhum pedido encontrado</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500">Os pedidos aparecerão aqui quando forem criados</p>
             </div>
           ) : (
             <div className="space-y-4">
               {recentOrders.map((order, index) => (
-                <div key={order.id || index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={order.id || index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{order.client_name}</h3>
-                    <p className="text-sm text-gray-600">{order.service}</p>
-                    <p className="text-xs text-gray-500">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">{order.client_name}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{order.service}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       {order.created_at ? format(new Date(order.created_at), 'dd/MM/yyyy HH:mm', { locale: ptBR }) : 'Data não disponível'}
                     </p>
                   </div>
@@ -214,7 +214,7 @@ const Dashboard = () => {
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </span>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       Entrega: {order.delivery_date ? format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR }) : 'N/A'}
                     </div>
                   </div>
