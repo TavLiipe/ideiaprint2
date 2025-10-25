@@ -36,27 +36,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const fetchUserRole = async (userId: string) => {
-      try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('*')
-          .eq('user_id', userId)
-          .eq('is_active', true)
-          .maybeSingle();
+  try {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle(); // sem filtrar is_active aqui
 
-        if (!error && data) {
-          setUserRole(data);
-          setIsAdmin(data.role === 'ADMIN');
-        } else {
-          setUserRole(null);
-          setIsAdmin(false);
-        }
-      } catch (error) {
-        console.error('Error fetching user role:', error);
-        setUserRole(null);
-        setIsAdmin(false);
-      }
-    };
+    if (!error && data) {
+      setUserRole(data);
+      setIsAdmin(data.role === 'ADMIN' && data.is_active); // garante que isAdmin só seja true se is_active também for true
+    } else {
+      setUserRole(null);
+      setIsAdmin(false);
+    }
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+    setUserRole(null);
+    setIsAdmin(false);
+  }
+};
 
     const getInitialSession = async () => {
       try {
