@@ -441,6 +441,16 @@ const NewOrderPage: React.FC<NewOrderPageProps> = ({ onBack, onSave }) => {
                   placeholder="Descreva os detalhes do projeto, especificações, quantidade, etc."
                 />
               </div>
+
+              <div className="mt-8 flex justify-end">
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl transition-all duration-200 font-bold text-lg flex items-center shadow-xl shadow-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/50 transform hover:scale-105"
+                >
+                  <Save className="w-6 h-6 mr-3" />
+                  Salvar
+                </button>
+              </div>
             </div>
           </div>
         )}
