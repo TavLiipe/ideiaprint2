@@ -17,6 +17,7 @@ interface Order {
   delivery_date: string;
   created_at: string;
   creator_email: string;
+  creator_name?: string;
 }
 
 interface OrderStatus {
@@ -194,9 +195,6 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                     OS
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Criado por
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Entrega
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -216,6 +214,9 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                     <td className="px-6 py-6 whitespace-nowrap">
                       <div className="text-sm font-bold text-orange-500">
                         #{String(index + 1).padStart(3, '0')}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {order.creator_name || order.creator_email}
                       </div>
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap">
@@ -273,11 +274,8 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                         {order.service_order_status === 'registrada' ? 'Registrada' : 'Pendente'}
                       </span>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                      {order.creator_email}
-                    </td>
                     <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-  Data: {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })} | 
+  Data: {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })} |
   Hora: {format(new Date(order.delivery_date), 'HH:mm', { locale: ptBR })}
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
