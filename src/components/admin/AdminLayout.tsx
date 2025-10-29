@@ -111,7 +111,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     const { data } = await supabase
       .from('order_statuses')
       .select('id')
-      .ilike('name', 'finalizado')
+      .ilike('name', 'concluído')
       .single();
 
     return data?.id || '';
@@ -181,7 +181,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         return (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos Finalizados</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos Concluídos</h1>
               <button
                 onClick={handleNewOrder}
                 className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200"
@@ -300,7 +300,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               }`}
             >
               <CheckCircle className="w-5 h-5 mr-3" />
-              Finalizados
+              Concluídos
             </button>
             
             {/* Divider */}
@@ -455,7 +455,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             >
               <CheckCircle className="w-6 h-6" />
               <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                Finalizados
+                Concluídos
               </div>
             </button>
             
