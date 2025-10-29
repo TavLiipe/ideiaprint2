@@ -179,28 +179,28 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
             <table className="w-full border-separate" style={{ borderSpacing: '0 8px' }}>
               <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     ID
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Serviço
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     OS
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Entrega
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Criado em
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Criado
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Ações
                   </th>
                 </tr>
@@ -211,36 +211,36 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
   key={order.id}
   className="border-2 border-orange-500 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
 >
-                    <td className="px-6 py-6 whitespace-nowrap">
+                    <td className="px-3 py-4 whitespace-nowrap">
                       <div className="text-sm font-bold text-orange-500">
                         #{String(index + 1).padStart(3, '0')}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                         {order.creator_name || order.creator_email}
                       </div>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap">
+                    <td className="px-3 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{order.client_name}</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">{order.client_email}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{order.client_email}</div>
                         {order.client_company && (
                           <div className="text-xs text-gray-400 dark:text-gray-500">{order.client_company}</div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 dark:text-gray-100">{order.service}</div>
+                    <td className="px-3 py-4">
+                      <div className="text-sm text-gray-900 dark:text-gray-100 max-w-[150px] truncate">{order.service}</div>
                       {order.description && (
-                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[150px]">
                           {order.description}
                         </div>
                       )}
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap">
+                    <td className="px-3 py-4 whitespace-nowrap">
                       <div className="relative status-menu-container">
                         <button
                           onClick={() => setStatusMenuOpen(statusMenuOpen === order.id ? null : order.id)}
-                          className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer border"
+                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer border"
                           style={getStatusStyle(getOrderStatus(order))}
                           title="Clique para alterar o status"
                         >
@@ -265,34 +265,34 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border ${
+                    <td className="px-3 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
                         order.service_order_status === 'registrada'
                           ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 border-green-300 dark:border-green-700'
                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 border-yellow-300 dark:border-yellow-700'
                       }`}>
-                        {order.service_order_status === 'registrada' ? 'Registrada' : 'Pendente'}
+                        {order.service_order_status === 'registrada' ? 'Reg.' : 'Pend.'}
                       </span>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-  Data: {format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })} |
-  Hora: {format(new Date(order.delivery_date), 'HH:mm', { locale: ptBR })}
+                    <td className="px-3 py-4 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
+                      <div>{format(new Date(order.delivery_date), 'dd/MM/yyyy', { locale: ptBR })}</div>
+                      <div className="text-gray-500 dark:text-gray-400">{format(new Date(order.delivery_date), 'HH:mm', { locale: ptBR })}</div>
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-3 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
                       {format(new Date(order.created_at), 'dd/MM/yyyy', { locale: ptBR })}
                     </td>
-                    <td className="px-6 py-6 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end space-x-2">
+                    <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-1">
                         <button
                           onClick={() => onSelectOrder(order)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                          className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                           title="Visualizar detalhes"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => onEditOrder(order)}
-                          className="p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors"
+                          className="p-1.5 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors"
                           title="Editar pedido"
                         >
                           <Edit className="w-4 h-4" />
