@@ -265,10 +265,10 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
                       </div>
                     </td>
                     <td className="px-6 py-6 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                      <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium border ${
                         order.service_order_status === 'registrada'
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 border-green-300 dark:border-green-700'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 border-yellow-300 dark:border-yellow-700'
                       }`}>
                         {order.service_order_status === 'registrada' ? 'Registrada' : 'Pendente'}
                       </span>
