@@ -27,7 +27,8 @@ import {
   Bell,
   Archive,
   Moon,
-  Sun
+  Sun,
+  CheckCircle
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -60,18 +61,24 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderEditMode, setOrderEditMode] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [completedOrders, setCompletedOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     if (currentView === 'orders') {
       fetchOrders();
+    } else if (currentView === 'completed-orders') {
+      fetchCompletedOrders();
     }
   }, [currentView]);
 
   const fetchOrders = async () => {
     try {
+      const finishedStatusId = await getFinishedStatusId();
+
       const { data, error } = await supabase
         .from('orders_with_creator')
         .select('*')
+        .neq('status_id', finishedStatusId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -80,6 +87,34 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       console.error('Error fetching orders:', error);
       setOrders([]);
     }
+  };
+
+  const fetchCompletedOrders = async () => {
+    try {
+      const finishedStatusId = await getFinishedStatusId();
+
+      const { data, error } = await supabase
+        .from('orders_with_creator')
+        .select('*')
+        .eq('status_id', finishedStatusId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setCompletedOrders(data || []);
+    } catch (error) {
+      console.error('Error fetching completed orders:', error);
+      setCompletedOrders([]);
+    }
+  };
+
+  const getFinishedStatusId = async (): Promise<string> => {
+    const { data } = await supabase
+      .from('order_statuses')
+      .select('id')
+      .ilike('name', 'finalizado')
+      .single();
+
+    return data?.id || '';
   };
 
   const handleSignOut = async () => {
@@ -142,6 +177,29 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             onRefresh={fetchOrders}
           />
         );
+      case 'completed-orders':
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos Finalizados</h1>
+              <button
+                onClick={handleNewOrder}
+                className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200"
+              >
+                <Plus className="w-6 h-6 mr-2" />
+                Novo Pedido
+              </button>
+            </div>
+            <OrderList
+              orders={completedOrders}
+              onSelectOrder={handleSelectOrder}
+              onEditOrder={handleEditOrder}
+              onNewOrder={handleNewOrder}
+              onRefresh={fetchCompletedOrders}
+              hideHeader={true}
+            />
+          </div>
+        );
       case 'reports':
         return (
           <Reports />
@@ -149,15 +207,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       case 'calendar':
         return (
           <Calendar />
-        );
-      case 'new-order':
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">Novo Pedido</h1>
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <p className="text-gray-600">Use o botão "Novo Pedido" na lista de pedidos para criar um novo pedido.</p>
-            </div>
-          </div>
         );
       case 'search':
         return (
@@ -235,15 +284,23 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               Pedidos
             </button>
             <button
-              onClick={() => handleViewChange('new-order')}
-              className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                currentView === 'new-order' 
-                  ? 'text-orange-700 bg-orange-100' 
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
+              onClick={handleNewOrder}
+              className="flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Plus className="w-5 h-5 mr-3" />
               Novo Pedido
+            </button>
+
+            <button
+              onClick={() => handleViewChange('completed-orders')}
+              className={`flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                currentView === 'completed-orders'
+                  ? 'text-orange-700 bg-orange-100'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <CheckCircle className="w-5 h-5 mr-3" />
+              Finalizados
             </button>
             
             {/* Divider */}
@@ -379,16 +436,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </button>
             
             <button
-              onClick={() => handleViewChange('new-order')}
-              className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
-                currentView === 'new-order' 
-                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' 
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
-              }`}
+              onClick={handleNewOrder}
+              className="group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500"
             >
               <Plus className="w-6 h-6" />
               <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Novo Pedido
+              </div>
+            </button>
+
+            <button
+              onClick={() => handleViewChange('completed-orders')}
+              className={`group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
+                currentView === 'completed-orders'
+                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-orange-500'
+              }`}
+            >
+              <CheckCircle className="w-6 h-6" />
+              <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Finalizados
               </div>
             </button>
             

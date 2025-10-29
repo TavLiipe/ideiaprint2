@@ -34,9 +34,10 @@ interface OrderListProps {
   onEditOrder: (order: Order) => void;
   onNewOrder: () => void;
   onRefresh: () => void;
+  hideHeader?: boolean;
 }
 
-const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrder, onNewOrder, onRefresh }) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrder, onNewOrder, onRefresh, hideHeader = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
@@ -120,16 +121,18 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos</h1>
-        <button
-          onClick={onNewOrder}
-          className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Novo Pedido
-        </button>
-      </div>
+      {!hideHeader && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos</h1>
+          <button
+            onClick={onNewOrder}
+            className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Novo Pedido
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
