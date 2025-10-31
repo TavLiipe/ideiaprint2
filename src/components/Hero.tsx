@@ -62,7 +62,7 @@ const Hero = () => {
             <div className="aspect-square bg-gradient-to-br from-blue-100 to-orange-100 rounded-2xl p-8 shadow-2xl">
               <div className="w-full h-full bg-white rounded-xl shadow-lg flex items-center justify-center overflow-hidden">
                 <img 
-                  src="https://images.pexels.com/photos/6802050/pexels-photo-6802050.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  src="" 
                   alt="Materiais gráficos da Ideia Print"
                   className="w-full h-full object-cover"
                 />
