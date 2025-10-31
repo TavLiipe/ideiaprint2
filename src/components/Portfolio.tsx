@@ -6,32 +6,32 @@ const Portfolio = () => {
     {
       title: 'Cartões Premium',
       category: 'Cartões de Visita',
-      image: 'https://images.pexels.com/photos/6804050/pexels-photo-6804050.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     },
     {
       title: 'Banner Corporativo',
       category: 'Sinalização',
-      image: 'https://images.pexels.com/photos/7651906/pexels-photo-7651906.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     },
     {
       title: 'Adesivos Personalizados',
       category: 'Adesivos',
-      image: 'https://images.pexels.com/photos/6802049/pexels-photo-6802049.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     },
     {
       title: 'Placas em Acrílico',
       category: 'Corte a Laser',
-      image: 'https://images.pexels.com/photos/6804051/pexels-photo-6804051.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     },
     {
       title: 'Impressão UV',
       category: 'Materiais Especiais',
-      image: 'https://images.pexels.com/photos/7651907/pexels-photo-7651907.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     },
     {
       title: 'Design de Logotipo',
       category: 'Design Gráfico',
-      image: 'https://images.pexels.com/photos/6802048/pexels-photo-6802048.jpeg?auto=compress&cs=tinysrgb&w=600'
+      image: ''
     }
   ];
 
