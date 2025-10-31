@@ -169,7 +169,7 @@ const Calendar = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-100">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
           {/* Calendar Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -180,7 +180,7 @@ const Calendar = () => {
                 onClick={() => setCurrentDate(subMonths(currentDate, 1))}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-gray-600" />
+                <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
               <button
                 onClick={() => setCurrentDate(new Date())}
@@ -192,7 +192,7 @@ const Calendar = () => {
                 onClick={() => setCurrentDate(addMonths(currentDate, 1))}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                <ChevronRight className="w-5 h-5 text-gray-600" />
+                <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
             </div>
           </div>
@@ -202,7 +202,7 @@ const Calendar = () => {
             {/* Days of week */}
             <div className="grid grid-cols-7 gap-1 mb-4">
               {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-                <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+                <div key={day} className="p-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
                   {day}
                 </div>
               ))}
@@ -222,12 +222,12 @@ const Calendar = () => {
                     onClick={() => handleDateClick(date)}
                     className={`
                       relative p-2 h-20 text-left border rounded-lg transition-all duration-200
-                      ${isSelected ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}
-                      ${!isCurrentMonth ? 'text-gray-400 bg-gray-50' : 'text-gray-900'}
-                      ${isTodayDate ? 'bg-blue-50 border-blue-300' : ''}
+                      ${isSelected ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
+                      ${!isCurrentMonth ? 'text-gray-400 bg-gray-50 dark:bg-gray-800/50' : 'text-gray-900 dark:text-gray-100'}
+                      ${isTodayDate ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700' : ''}
                     `}
                   >
-                    <div className={`text-sm font-medium ${isTodayDate ? 'text-blue-600' : ''}`}>
+                    <div className={`text-sm font-medium ${isTodayDate ? 'text-blue-600 dark:text-blue-400' : ''}`}>
                       {format(date, 'd')}
                     </div>
                     
@@ -242,7 +242,7 @@ const Calendar = () => {
                           />
                         ))}
                         {dayOrders.length > 2 && (
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
                             +{dayOrders.length - 2} mais
                           </div>
                         )}
@@ -259,18 +259,18 @@ const Calendar = () => {
         <div className="space-y-6">
           {/* Selected Date Orders */}
           {selectedDate && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {format(selectedDate, 'dd \'de\' MMMM', { locale: ptBR })}
                 </h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   {selectedOrders.length} {selectedOrders.length === 1 ? 'entrega' : 'entregas'}
                 </p>
               </div>
               <div className="p-6">
                 {selectedOrders.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-gray-500 dark:text-gray-400 text-center py-4">
                     Nenhuma entrega agendada
                   </p>
                 ) : (
@@ -279,21 +279,21 @@ const Calendar = () => {
                       <div
                         key={order.id}
                         className={`p-3 rounded-lg border-l-4 ${
-                          isOverdue(order) ? 'border-red-500 bg-red-50' : 
-                          order.status === 'em_producao' ? 'border-yellow-500 bg-yellow-50' :
-                          order.status === 'finalizado' ? 'border-green-500 bg-green-50' :
-                          'border-gray-500 bg-gray-50'
+                          isOverdue(order) ? 'border-red-500 bg-red-50 dark:bg-red-900/20' :
+                          order.status === 'em_producao' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' :
+                          order.status === 'finalizado' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' :
+                          'border-gray-500 bg-gray-50 dark:bg-gray-800/50'
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">{order.client_name}</h4>
-                            <p className="text-sm text-gray-600">{order.service}</p>
+                            <h4 className="font-medium text-gray-900 dark:text-white">{order.client_name}</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{order.service}</p>
                             <div className="flex items-center mt-2">
                               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                order.status === 'em_producao' ? 'bg-yellow-100 text-yellow-800' :
-                                order.status === 'finalizado' ? 'bg-green-100 text-green-800' :
-                                'bg-red-100 text-red-800'
+                                order.status === 'em_producao' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400' :
+                                order.status === 'finalizado' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' :
+                                'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
                               }`}>
                                 {getStatusText(order.status)}
                               </span>
@@ -313,9 +313,9 @@ const Calendar = () => {
 
           {/* Overdue Orders */}
           {overdueOrders.length > 0 && (
-            <div className="bg-white rounded-xl shadow-lg border border-red-200">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-red-900 flex items-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-red-200 dark:border-red-800">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-red-900 dark:text-red-400 flex items-center">
                   <AlertTriangle className="w-5 h-5 mr-2 text-red-500" />
                   Entregas em Atraso
                 </h3>
@@ -323,10 +323,10 @@ const Calendar = () => {
               <div className="p-6">
                 <div className="space-y-3">
                   {overdueOrders.slice(0, 5).map(order => (
-                    <div key={order.id} className="p-3 bg-red-50 rounded-lg border border-red-200">
-                      <h4 className="font-medium text-gray-900">{order.client_name}</h4>
-                      <p className="text-sm text-gray-600">{order.service}</p>
-                      <p className="text-xs text-red-600 mt-1">
+                    <div key={order.id} className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                      <h4 className="font-medium text-gray-900 dark:text-white">{order.client_name}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{order.service}</p>
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                         Venceu em {format(parseISO(order.delivery_date), 'dd/MM/yyyy')}
                       </p>
                     </div>
@@ -337,25 +337,25 @@ const Calendar = () => {
           )}
 
           {/* Upcoming Orders */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                 <Clock className="w-5 h-5 mr-2 text-green-500" />
                 Próximas Entregas
               </h3>
             </div>
             <div className="p-6">
               {upcomingOrders.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
                   Nenhuma entrega próxima
                 </p>
               ) : (
                 <div className="space-y-3">
                   {upcomingOrders.map(order => (
-                    <div key={order.id} className="p-3 bg-green-50 rounded-lg border border-green-200">
-                      <h4 className="font-medium text-gray-900">{order.client_name}</h4>
-                      <p className="text-sm text-gray-600">{order.service}</p>
-                      <p className="text-xs text-green-600 mt-1">
+                    <div key={order.id} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <h4 className="font-medium text-gray-900 dark:text-white">{order.client_name}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{order.service}</p>
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                         {format(parseISO(order.delivery_date), 'dd/MM/yyyy')}
                       </p>
                     </div>
