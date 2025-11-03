@@ -88,13 +88,13 @@ const Hero = () => {
               </a>
             </div>
           <div>
-  <img
-    src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
-    alt="Materiais gráficos da Ideia Print"
-    className={`w-full h-full object-cover rounded-lg transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
-    style={getDelay(9, 200)}
-  />
-</div>
+          <img
+            src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
+            alt="Materiais gráficos da Ideia Print"
+            className={`w-full h-full object-cover rounded-lg transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
+            style={getDelay(9, 200)}
+          />
+        </div>
         </div>
     </section>
   );
