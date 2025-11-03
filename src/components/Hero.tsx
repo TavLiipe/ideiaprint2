@@ -8,7 +8,7 @@ const Hero = () => {
   className="relative w-full bg-contain bg-center bg-no-repeat"
   style={{
     backgroundImage: 'url("https://i.ibb.co/VpvyKFzZ/TESTE.png")',
-    height: '1080px', // altura fixa para corresponder à arte
+    height: '1060px', // altura fixa para corresponder à arte
   }}
 >
   <div className="absolute inset-0 bg-black/60"></div>
