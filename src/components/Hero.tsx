@@ -95,7 +95,6 @@ const Hero = () => {
             style={getDelay(9, 200)}
           />
         </div>
-        </div>
     </section>
   );
 };
