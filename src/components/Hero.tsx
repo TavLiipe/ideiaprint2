@@ -10,6 +10,18 @@ const Hero = () => {
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                <span className="text-white-400">Ideia Print</span>
+                <br />
+                <span className="text-white-200">Impressões e</span>
+                <br />
+                <span className="text-orange-400">Comunicação Visual</span>
+              </h1>
+              <p className="text-xl text-gray-100 leading-relaxed">
+                Cartões, banners, impressão UV, corte a laser e muito mais com
+                <span className="font-semibold text-blue-300"> qualidade </span>
+                e <span className="font-semibold text-orange-400">rapidez</span>
+              </p>
             </div>
 
             {/* Features */}
