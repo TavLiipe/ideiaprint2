@@ -5,6 +5,28 @@ const Services = () => {
 
   const services = [
     {
+      image: "https://i.ibb.co/S4LMfbXn/1-MOCKUP.png",
+      title: 'Cartões de Visita',
+      description: 'Cartões personalizados com acabamento premium e design exclusivo.',
+      features: ['Papel couchê', 'Verniz UV', 'Corte especial', 'Laminação']
+    },
+    {
+      image: "https://i.ibb.co/S4LMfbXn/1-MOCKUP.png",
+      title: 'Banners e Placas',
+      description: 'Impressão em lona, PVC e outros materiais para comunicação visual.',
+      features: ['Lona vinílica', 'PVC expandido', 'Impressão UV', 'Placas de ACM']
+    },
+    {
+      image: "https://i.ibb.co/S4LMfbXn/1-MOCKUP.png",
+      title: 'Adesivos',
+      description: 'Adesivos personalizados para veículos, vitrines e decoração.',
+      features: ['Vinil automotivo', 'Recorte eletrônico', 'Laminação', 'Etiquetas']
+    }
+    // Adicione mais serviços aqui
+  ];
+
+  const services = [
+    {
       image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: CreditCard,
       title: 'Cartões de Visita',
