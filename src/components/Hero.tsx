@@ -3,20 +3,25 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section
-  id="inicio"
-  className="relative w-full bg-contain bg-center bg-no-repeat"
-  style={{
-    backgroundImage: 'url("https://i.ibb.co/VpvyKFzZ/TESTE.png")',
-    height: '1040px', // altura fixa para corresponder à arte
-  }}
->
-  <div className="absolute inset-0 bg-black/60"></div>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
-  <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
+    <section id="inicio" className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.png")' }}>
+      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                <span className="text-white-400">Ideia Print</span>
+                <br />
+                <span className="text-white-200">Impressões e</span>
+                <br />
+                <span className="text-orange-400">Comunicação Visual</span>
+              </h1>
+              <p className="text-xl text-gray-100 leading-relaxed">
+                Cartões, banners, impressão UV, corte a laser e muito mais com
+                <span className="font-semibold text-blue-300"> qualidade </span>
+                e <span className="font-semibold text-orange-400">rapidez</span>
+              </p>
             </div>
 
             {/* Features */}
