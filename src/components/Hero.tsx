@@ -94,7 +94,7 @@ const Hero = () => {
             className={`w-full h-full transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
             style={getDelay(9, 200)}
           >
-            <Spline scene="URL_DO_SEU_SPLINE.splinecode" />
+            <Spline scene="https://my.spline.design/spline3dstarterfile-Q1OjUl6IqUA0zsplDmDWoeyX/" />
           </div>
         </div>
       </div>
