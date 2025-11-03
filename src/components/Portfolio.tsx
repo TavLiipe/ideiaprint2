@@ -6,7 +6,7 @@ const Portfolio = () => {
     {
       title: 'Cartões Premium',
       category: 'Cartões de Visita',
-      image: ''
+      image: 'https://ibb.co/r20L9f1w'
     },
     {
       title: 'Banner Corporativo',
