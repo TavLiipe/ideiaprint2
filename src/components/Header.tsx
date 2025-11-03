@@ -37,7 +37,7 @@ const Header = () => {
     isScrolled ? 'shadow-lg' : ''
   }`}
   style={{
-    backgroundImage: "url('https://SEU-LINK-DA-IMAGEM-AQUI.png')", // 🔗 coloque aqui a URL da sua imagem
+    backgroundImage: "url('https://i.ibb.co/1Ghk1jPn/FAIXA.png')", // 🔗 coloque aqui a URL da sua imagem
     backgroundSize: 'cover', // cobre toda a largura
     backgroundRepeat: 'no-repeat', // evita repetir
     backgroundPosition: 'center', // centraliza a imagem
