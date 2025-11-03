@@ -3,10 +3,13 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section id="inicio" className="pt-20 pb-16 bg-contain bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://i.ibb.co/9mL640Qq/TESTE.png")' }}>
-      <div className="absolute inset-0 bg-black/60"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section
+        id="inicio"
+        className="relative w-full bg-center bg-no-repeat bg-contain"
+        style={{
+          backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.png")',
+          height: '1080px', // altura fixa para a arte
+        }}
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
