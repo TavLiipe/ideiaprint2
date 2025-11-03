@@ -7,7 +7,7 @@ const Hero = () => {
   id="inicio"
   className="relative w-full bg-contain bg-center bg-no-repeat"
   style={{
-    backgroundImage: 'url("https://i.ibb.co/VpvyKFzZ/TESTE.png")',
+    backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.png")',
     height: '1040px', // altura fixa para corresponder à arte
   }}
 >
