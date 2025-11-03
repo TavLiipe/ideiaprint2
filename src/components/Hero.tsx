@@ -59,7 +59,6 @@ const Hero = () => {
           </div>
 
           {/* Image/Mockup */}
-              <div className="w-full h-full bg-white/10 rounded-xl shadow-lg flex items-center justify-center overflow-hidden backdrop-blur-sm border border-white/20">
                 <img
                   src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
                   alt="Materiais gráficos da Ideia Print"
@@ -67,7 +66,6 @@ const Hero = () => {
                 />
               </div>
             </div>
-          </div>
     </section>
   );
 };
