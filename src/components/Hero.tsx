@@ -89,12 +89,12 @@ const Hero = () => {
           </div>
 
           {/* Spline 3D com stagger */}
-<div
-  className={`w-full h-full transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
-  style={getDelay(9, 200)}
->
-  <Spline scene="URL_DO_SEU_SPLINE.splinecode" />
-</div>
+          <div
+            className={`w-full h-full transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
+            style={getDelay(9, 200)}
+          >
+            <Spline scene="URL_DO_SEU_SPLINE.splinecode" />
+          </div>
     </section>
   );
 };
