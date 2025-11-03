@@ -126,21 +126,18 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Google Maps */}
-            <div className="mt-12">
-              <h3 className="text-lg font-semibold text-white mb-4">Localização</h3>
-              <div className="w-full h-64 rounded-lg overflow-hidden border border-gray-800">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!2m3!1d3675.038116323274!2d-46.652812284558944!3d-23.55577196709183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59b8e8df0a3b%3A0xd3af9f7b13c40a73!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1699020412301!5m2!1spt-BR!2sbr"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
-            </div>
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-6">Contato</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <MapPin className="w-5 h-5 text-orange-400 flex-shrink-0 mt-1" />
+                  <div className="text-gray-400 text-sm">
+                    Rua das Impressões, 123<br />
+                    Centro - São Paulo - SP<br />
+                    CEP: 01234-567
+                  </div>
+                </div>
                 
                 <div className="flex items-center space-x-3">
                   <Phone className="w-5 h-5 text-orange-400 flex-shrink-0" />
@@ -172,6 +169,22 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        {/* Google Maps */}
+<div className="mt-12">
+  <h3 className="text-lg font-semibold text-white mb-4">Localização</h3>
+  <div className="w-full h-64 rounded-lg overflow-hidden border border-gray-800">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!2m3!1d3675.038116323274!2d-46.652812284558944!3d-23.55577196709183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59b8e8df0a3b%3A0xd3af9f7b13c40a73!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1699020412301!5m2!1spt-BR!2sbr"
+      width="100%"
+      height="100%"
+      style={{ border: 0 }}
+      allowFullScreen=""
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+</div>
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 py-8">
