@@ -4,36 +4,42 @@ import { CreditCard, Image, Sticker, Zap, Scissors, Palette } from 'lucide-react
 const Services = () => {
   const services = [
     {
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: CreditCard,
       title: 'Cartões de Visita',
       description: 'Cartões personalizados com acabamento premium e design exclusivo.',
       features: ['Papel couchê', 'Verniz UV', 'Corte especial', 'Laminação']
     },
     {
+      image: 'https://i.ibb.co/9mL640Qq/TESTE.png',
       icon: Image,
       title: 'Banners e Placas',
       description: 'Impressão em lona, PVC e outros materiais para comunicação visual.',
       features: ['Lona vinílica', 'PVC expandido', 'Impressão UV', 'Placas de ACM']
     },
     {
+      image: 'https://i.ibb.co/1Ghk1jPn/FAIXA.png',
       icon: Sticker,
       title: 'Adesivos',
       description: 'Adesivos personalizados para veículos, vitrines e decoração.',
       features: ['Vinil automotivo', 'Recorte eletrônico', 'Laminação', 'Etiquetas']
     },
     {
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: Zap,
       title: 'Impressão UV',
       description: 'Tecnologia UV para impressão em diversos materiais rígidos.',
       features: ['Madeira', 'Acrílico', 'Metal', 'Vidro', 'Cerâmica']
     },
     {
+      image: 'https://i.ibb.co/9mL640Qq/TESTE.png',
       icon: Scissors,
       title: 'Corte a Laser',
       description: 'Cortes precisos em acrílico, MDF e outros materiais.',
       features: ['Alta precisão', 'Acabamento perfeito', 'MDF', 'Acrílico', 'Gravação']
     },
     {
+      image: 'https://i.ibb.co/1Ghk1jPn/FAIXA.png',
       icon: Palette,
       title: 'Design Gráfico',
       description: 'Criação de layouts e identidade visual para sua empresa.',
@@ -62,18 +68,33 @@ const Services = () => {
               key={index}
               className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
             >
+              {/* Imagem centralizada no topo */}
+              {service.image && (
+                <div className="flex justify-center mb-4">
+                  <img 
+                    src={service.image} 
+                    alt={service.title} 
+                    className="w-24 h-24 object-contain rounded-lg"
+                  />
+                </div>
+              )}
+
+              {/* Ícone */}
               <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
                 <service.icon className="w-8 h-8 text-white" />
               </div>
               
+              {/* Título */}
               <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300">
                 {service.title}
               </h3>
               
+              {/* Descrição */}
               <p className="text-gray-600 mb-6 leading-relaxed">
                 {service.description}
               </p>
               
+              {/* Features */}
               <ul className="space-y-2">
                 {service.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-center text-sm text-gray-700">
@@ -83,6 +104,7 @@ const Services = () => {
                 ))}
               </ul>
 
+              {/* CTA */}
               <div className="mt-6 pt-6 border-t border-gray-100">
                 <a
                   href={`https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o serviço de ${service.title}`}
