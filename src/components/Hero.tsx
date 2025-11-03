@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section id="inicio" className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://ibb.co/pjGSc5MP")' }}>
+    <section id="inicio" className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.pngP")' }}>
       <div className="absolute inset-0 bg-black/60"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
