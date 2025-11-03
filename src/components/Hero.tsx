@@ -25,7 +25,7 @@ const Hero = () => {
           Cartões, banners, impressão UV, corte a laser e muito mais com
           <span className="font-semibold text-blue-300"> qualidade </span>
           e <span className="font-semibold text-orange-400">rapidez</span>
-        </p>
+            </p>
             </div>
 
             {/* Features */}
