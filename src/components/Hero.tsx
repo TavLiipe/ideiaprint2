@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoaded(true), 100); // Delay para disparar animação
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <section id="inicio" className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.png")' }}>
+    <section
+      id="inicio"
+      className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: 'url("https://i.ibb.co/1Ghk1jPn/FAIXA.png")' }}
+    >
       <div className="absolute inset-0 bg-black/60"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+
           {/* Content */}
           <div className="space-y-8">
-            <div className="space-y-4">
+
+            {/* Headline */}
+            <div className={`space-y-4 transition-all duration-1000 ease-out transform ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
                 <span className="text-white-400">Ideia Print</span>
                 <br />
@@ -25,7 +39,7 @@ const Hero = () => {
             </div>
 
             {/* Features */}
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className={`grid sm:grid-cols-2 gap-4 transition-all duration-1200 ease-out transform ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400" />
                 <span className="text-gray-100">Entrega Rápida</span>
@@ -45,7 +59,7 @@ const Hero = () => {
             </div>
 
             {/* CTA Button */}
-            <div>
+            <div className={`transition-all duration-1400 transform ${loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
               <a
                 href="https://wa.me/5511999999999?text=Olá! Gostaria de fazer um pedido agora."
                 target="_blank"
@@ -58,14 +72,14 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Image/Mockup */}
-                <img
-                  src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
-                  alt="Materiais gráficos da Ideia Print"
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
-            </div>
+          {/* Image */}
+          <img
+            src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
+            alt="Materiais gráficos da Ideia Print"
+            className={`w-full h-full object-cover rounded-lg transition-all duration-1500 ease-out transform ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
+          />
+        </div>
+      </div>
     </section>
   );
 };
