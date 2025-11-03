@@ -37,7 +37,7 @@ const Header = () => {
     isScrolled ? 'shadow-lg' : ''
   }`}
   style={{
-    backgroundImage: "url('https://i.ibb.co/1Ghk1jPn/FAIXA.png')", // 🔗 coloque aqui a URL da sua imagem
+    backgroundImage: "url('https://SEU-LINK-DA-IMAGEM-AQUI.png')", // 🔗 coloque aqui a URL da sua imagem
     backgroundSize: 'cover', // cobre toda a largura
     backgroundRepeat: 'no-repeat', // evita repetir
     backgroundPosition: 'center', // centraliza a imagem
@@ -48,9 +48,9 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
-              src="https://i.ibb.co/1JmWbkdQ/LOGO-HORIZONTAL.png" 
+              src="https://i.ibb.co/S77yh02d/LOGO-HORIZONTAL.png" 
               alt="Ideia Print Logo"
-              className="w-13 h-13 object-contain"
+              className="w-30 h-30 object-contain"
             />
             <div className="flex flex-col">
             </div>
