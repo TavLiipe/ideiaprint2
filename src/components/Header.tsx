@@ -34,19 +34,15 @@ const Header = () => {
   return (
     <header
   className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-    isScrolled
-      ? 'shadow-lg'
-      : ''
+    isScrolled ? 'shadow-lg' : ''
   }`}
   style={{
-    backgroundColor: isScrolled
-      ? 'rgb(20, 60, 120)' // cor quando rola
-      : 'rgba(20, 60, 120, 0.9)', // cor com transparência no topo
-    backdropFilter: !isScrolled ? 'blur(6px)' : 'none',
+    backgroundImage: "url('https://exemplo.com/sua-imagem.png')", // 👉 coloque aqui o link da sua imagem
+    backgroundSize: 'cover', // cobre toda a área do menu
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center', // centraliza a imagem
   }}
 >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
