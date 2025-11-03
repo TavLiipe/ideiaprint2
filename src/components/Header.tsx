@@ -50,7 +50,7 @@ const Header = () => {
             <img 
               src="https://i.ibb.co/1JmWbkdQ/LOGO-HORIZONTAL.png" 
               alt="Ideia Print Logo"
-              className="w-1 h-1 object-contain"
+              className="w-5 h-5 object-contain"
             />
             <div className="flex flex-col">
             </div>
