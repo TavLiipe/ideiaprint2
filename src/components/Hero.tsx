@@ -14,31 +14,6 @@ const Hero = () => {
   <div className="absolute inset-0 bg-black/60"></div>
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
   <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
-          {/* Content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-            </div>
-
-            {/* Features */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Entrega Rápida</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Alta Qualidade</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Preços Competitivos</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Atendimento Personalizado</span>
-              </div>
-            </div>
-
             {/* CTA Button */}
             <div>
               <a
