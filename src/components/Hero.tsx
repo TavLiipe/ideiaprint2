@@ -17,8 +17,6 @@ const Hero = () => {
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-            </div>
-            </div>
 
             {/* CTA Button */}
             <div>
