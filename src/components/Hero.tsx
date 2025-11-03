@@ -96,6 +96,7 @@ const Hero = () => {
           >
             <Spline scene="URL_DO_SEU_SPLINE.splinecode" />
           </div>
+        </div>
       </div>
     </section>
   );
