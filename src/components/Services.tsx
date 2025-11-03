@@ -25,51 +25,6 @@ const Services = () => {
     // Adicione mais serviços aqui
   ];
 
-  const services = [
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: CreditCard,
-      title: 'Cartões de Visita',
-      description: 'Cartões personalizados com acabamento premium e design exclusivo.',
-      features: ['Papel couchê', 'Verniz UV', 'Corte especial', 'Laminação']
-    },
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: Image,
-      title: 'Banners e Placas',
-      description: 'Impressão em lona, PVC e outros materiais para comunicação visual.',
-      features: ['Lona vinílica', 'PVC expandido', 'Impressão UV', 'Placas de ACM']
-    },
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: Sticker,
-      title: 'Adesivos',
-      description: 'Adesivos personalizados para veículos, vitrines e decoração.',
-      features: ['Vinil automotivo', 'Recorte eletrônico', 'Laminação', 'Etiquetas']
-    },
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: Zap,
-      title: 'Impressão UV',
-      description: 'Tecnologia UV para impressão em diversos materiais rígidos.',
-      features: ['Madeira', 'Acrílico', 'Metal', 'Vidro', 'Cerâmica']
-    },
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: Scissors,
-      title: 'Corte a Laser',
-      description: 'Cortes precisos em acrílico, MDF e outros materiais.',
-      features: ['Alta precisão', 'Acabamento perfeito', 'MDF', 'Acrílico', 'Gravação']
-    },
-    {
-      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
-      icon: Palette,
-      title: 'Design Gráfico',
-      description: 'Criação de layouts e identidade visual para sua empresa.',
-      features: ['Logotipos', 'Layouts', 'Identidade visual', 'Catálogos', 'Folders']
-    }
-  ];
-
   return (
     <section id="servicos" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
