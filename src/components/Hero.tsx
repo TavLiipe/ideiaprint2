@@ -59,6 +59,8 @@ const Hero = () => {
           </div>
 
           {/* Image/Mockup */}
+          <div className="relative">
+            <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-orange-500/20 rounded-2xl p-8 shadow-2xl border border-white/10">
               <div className="w-full h-full bg-white/10 rounded-xl shadow-lg flex items-center justify-center overflow-hidden backdrop-blur-sm border border-white/20">
                 <img
                   src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
