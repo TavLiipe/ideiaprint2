@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
 
 const Hero = () => {
   const [loaded, setLoaded] = useState(false);
