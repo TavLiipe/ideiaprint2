@@ -88,19 +88,12 @@ const Hero = () => {
               </a>
             </div>
           </div>
-          <div
-              className={`w-full h-full rounded-lg transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
-              style={getDelay(9, 200)}
-            >
-              <iframe
-                src="https://my.spline.design/spline3dstarterfile-Q1OjUl6IqUA0zsplDmDWoeyX/"
-                frameBorder="0"
-                width="100%"
-                height="100%"
-                className="rounded-lg"
-                allowFullScreen
-              ></iframe>
-            </div>
+          <img
+    src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
+    alt="Materiais gráficos da Ideia Print"
+    className={`w-full h-full object-cover rounded-lg transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
+    style={getDelay(9, 200)}
+  />
           </div>
         </div>
     </section>
