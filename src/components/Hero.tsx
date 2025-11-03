@@ -88,6 +88,7 @@ const Hero = () => {
             </div>
           </div>
 
+          {/* Image com stagger */}
           {/* Spline 3D com stagger */}
           <div
             className={`w-full h-full transform transition-all duration-1000 ${loaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
@@ -95,6 +96,7 @@ const Hero = () => {
           >
             <Spline scene="URL_DO_SEU_SPLINE.splinecode" />
           </div>
+      </div>
     </section>
   );
 };
