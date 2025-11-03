@@ -87,7 +87,6 @@ const Hero = () => {
                 <ArrowRight className="w-6 h-6 ml-2" />
               </a>
             </div>
-          <div>
           <img
             src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
             alt="Materiais gráficos da Ideia Print"
