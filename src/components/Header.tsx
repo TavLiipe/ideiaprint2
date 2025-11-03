@@ -48,7 +48,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
-              src="https://cdn.discordapp.com/attachments/980003561863782420/1416863885071356035/26e1a8eb-5222-4737-953d-ab4f9c0f85cf.png?ex=68c864d2&is=68c71352&hm=798d6ec3d77c257ed103625156cde870e0662baec1ff7c78a9bd3b8faa8a42e5&" 
+              src="https://i.ibb.co/1JmWbkdQ/LOGO-HORIZONTAL.png" 
               alt="Ideia Print Logo"
               className="w-30 h-30 object-contain"
             />
