@@ -2,6 +2,7 @@ import React from 'react';
 import { CreditCard, Image, Sticker, Zap, Scissors, Palette } from 'lucide-react';
 
 const Services = () => {
+  const [zoomedImage, setZoomedImage] = useState(null); // armazena a imagem clicada
   const services = [
     {
       image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
