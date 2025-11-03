@@ -3,43 +3,44 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section id="inicio" className="pt-20 pb-16 from-blue-50 to-orange-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="inicio" className="pt-20 pb-16 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=1600")' }}>
+      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                <span className="text-blue-700">Ideia Print</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                <span className="text-blue-400">Ideia Print</span>
                 <br />
-                <span className="text-gray-800">Impressões e</span>
+                <span className="text-gray-200">Impressões e</span>
                 <br />
-                <span className="text-orange-500">Comunicação Visual</span>
+                <span className="text-orange-400">Comunicação Visual</span>
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                Cartões, banners, impressão UV, corte a laser e muito mais com 
-                <span className="font-semibold text-blue-700"> qualidade </span>
-                e <span className="font-semibold text-orange-500">rapidez</span>
+              <p className="text-xl text-gray-100 leading-relaxed">
+                Cartões, banners, impressão UV, corte a laser e muito mais com
+                <span className="font-semibold text-blue-300"> qualidade </span>
+                e <span className="font-semibold text-orange-400">rapidez</span>
               </p>
             </div>
 
             {/* Features */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-gray-700">Entrega Rápida</span>
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-gray-100">Entrega Rápida</span>
               </div>
               <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-gray-700">Alta Qualidade</span>
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-gray-100">Alta Qualidade</span>
               </div>
               <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-gray-700">Preços Competitivos</span>
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-gray-100">Preços Competitivos</span>
               </div>
               <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-gray-700">Atendimento Personalizado</span>
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-gray-100">Atendimento Personalizado</span>
               </div>
             </div>
 
@@ -59,12 +60,12 @@ const Hero = () => {
 
           {/* Image/Mockup */}
           <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-blue-100 to-orange-100 rounded-2xl p-8 shadow-2xl">
-              <div className="w-full h-full bg-white rounded-xl shadow-lg flex items-center justify-center overflow-hidden">
-                <img 
-                  src="" 
+            <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-orange-500/20 rounded-2xl p-8 shadow-2xl border border-white/10">
+              <div className="w-full h-full bg-white/10 rounded-xl shadow-lg flex items-center justify-center overflow-hidden backdrop-blur-sm border border-white/20">
+                <img
+                  src="https://images.pexels.com/photos/3944387/pexels-photo-3944387.jpeg?auto=compress&cs=tinysrgb&w=1600"
                   alt="Materiais gráficos da Ideia Print"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
             </div>
