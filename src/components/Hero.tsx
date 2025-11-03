@@ -13,7 +13,7 @@ const Hero = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
                 <span className="text-white-400">Ideia Print</span>
                 <br />
-                <span className="text-gray-200">Impressões e</span>
+                <span className="text-white-400">Impressões e</span>
                 <br />
                 <span className="text-orange-400">Comunicação Visual</span>
               </h1>
