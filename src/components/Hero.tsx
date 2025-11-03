@@ -7,6 +7,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-black/60"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+            </div>
 
             {/* Features */}
             <div className="grid sm:grid-cols-2 gap-4">
