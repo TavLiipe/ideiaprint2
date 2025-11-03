@@ -4,16 +4,16 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 const Hero = () => {
   return (
     <section
-      id="inicio"
-      className="relative w-full bg-contain bg-center bg-no-repeat"
-      style={{
-        backgroundImage: 'url("https://i.ibb.co/9mL640Qq/TESTE.png")',
-        height: '1080px', // altura fixa para corresponder à arte
-      }}
-    >
-      <div className="absolute inset-0 bg-black/60"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
-        <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
+  id="inicio"
+  className="relative w-full bg-contain bg-center bg-no-repeat"
+  style={{
+    backgroundImage: 'url("https://i.ibb.co/9mL640Qq/TESTE.png")',
+    height: '1080px', // altura fixa para corresponder à arte
+  }}
+>
+  <div className="absolute inset-0 bg-black/60"></div>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
+    <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
@@ -30,9 +30,6 @@ const Hero = () => {
                 e <span className="font-semibold text-orange-400">rapidez</span>
               </p>
             </div>
-          </div>
-        </div>
-      </div>
 
             {/* Features */}
             <div className="grid sm:grid-cols-2 gap-4">
