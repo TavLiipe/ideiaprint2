@@ -65,60 +65,55 @@ const Services = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div 
-              key={index}
-              className="group bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
-            >
-              {/* Imagem centralizada no topo */}
-              {service.image && (
-                <div className="flex justify-center mb-4">
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    className="w-24 h-24 object-contain rounded-lg"
-                  />
-                </div>
-              )}
+  key={index}
+  className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center"
+>
+  {/* Imagem centralizada maior */}
+  {service.image && (
+    <div className="flex justify-center mb-4 w-full">
+      <img 
+        src={service.image} 
+        alt={service.title} 
+        className="w-full h-48 object-contain rounded-lg" 
+      />
+    </div>
+  )}
 
-              {/* Ícone */}
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                <service.icon className="w-8 h-8 text-white" />
-              </div>
-              
-              {/* Título */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300">
-                {service.title}
-              </h3>
-              
-              {/* Descrição */}
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {service.description}
-              </p>
-              
-              {/* Features */}
-              <ul className="space-y-2">
-                {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center text-sm text-gray-700">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+  {/* Título */}
+  <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center group-hover:text-blue-700 transition-colors duration-300">
+    {service.title}
+  </h3>
 
-              {/* CTA */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <a
-                  href={`https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o serviço de ${service.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-orange-500 hover:text-orange-600 font-semibold transition-colors duration-200"
-                >
-                  Solicitar Orçamento
-                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
+  {/* Descrição */}
+  <p className="text-gray-600 mb-6 leading-relaxed text-center">
+    {service.description}
+  </p>
+
+  {/* Features */}
+  <ul className="space-y-2 text-center">
+    {service.features.map((feature, featureIndex) => (
+      <li key={featureIndex} className="flex items-center justify-center text-sm text-gray-700">
+        <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+        {feature}
+      </li>
+    ))}
+  </ul>
+
+  {/* CTA */}
+  <div className="mt-6 pt-6 border-t border-gray-100">
+    <a
+      href={`https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre o serviço de ${service.title}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center text-orange-500 hover:text-orange-600 font-semibold transition-colors duration-200"
+    >
+      Solicitar Orçamento
+      <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </a>
+  </div>
+</div>
           ))}
         </div>
       </div>
