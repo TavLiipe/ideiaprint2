@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { useInView } from '../hooks/useInView';
 
 const Contact = () => {
+  const [ref, isInView] = useInView();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,10 +26,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contato" className="py-20 bg-gray-50">
+    <section id="contato" className="py-20 bg-gray-50" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Entre em <span className="text-orange-500">Contato</span>
           </h2>
@@ -38,7 +40,7 @@ const Contact = () => {
 
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className={`space-y-8 ${isInView ? 'animate-fade-in-left' : 'opacity-0'}`}>
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">
                 Informações de Contato
@@ -118,7 +120,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className={`bg-white rounded-2xl p-8 shadow-lg ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
             <h3 className="text-2xl font-bold text-gray-900 mb-6">
               Solicite seu Orçamento
             </h3>

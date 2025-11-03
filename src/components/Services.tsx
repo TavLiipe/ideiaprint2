@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useInView } from '../hooks/useInView';
 
 const Services = () => {
   const [zoomedImage, setZoomedImage] = useState(null);
+  const [ref, isInView] = useInView();
 
   const services = [
     {
@@ -43,10 +45,10 @@ const Services = () => {
   ];
 
   return (
-    <section id="servicos" className="py-20 bg-white">
+    <section id="servicos" className="py-20 bg-white" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Nossos Serviços</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Oferecemos soluções completas em comunicação visual e impressão digital 
@@ -57,9 +59,10 @@ const Services = () => {
         {/* Grid de Serviços */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div 
+            <div
               key={index}
-              className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center"
+              className={`group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Imagem clicável */}
               {service.image && (

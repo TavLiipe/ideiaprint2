@@ -1,7 +1,10 @@
 import React from 'react';
 import { Award, Clock, Users, Zap } from 'lucide-react';
+import { useInView } from '../hooks/useInView';
 
 const About = () => {
+  const [ref, isInView] = useInView();
+
   const stats = [
     { icon: Award, label: 'Anos de Experiência', value: '15+' },
     { icon: Users, label: 'Clientes Satisfeitos', value: '2500+' },
@@ -10,12 +13,12 @@ const About = () => {
   ];
 
   return (
-    <section id="sobre" className="py-20 bg-white">
+    <section id="sobre" className="py-20 bg-white" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <div className="space-y-8">
-            <div>
+            <div className={`${isInView ? 'animate-fade-in-left' : 'opacity-0'}`}>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
                 <span className="text-blue-700">Sobre</span> a <span className="text-orange-500">Ideia Print</span>
               </h2>
@@ -43,7 +46,7 @@ const About = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+                <div key={index} className={`text-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: `${index * 100}ms` }}>
                   <div className="flex justify-center mb-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
                       <stat.icon className="w-6 h-6 text-white" />
@@ -57,7 +60,7 @@ const About = () => {
           </div>
 
           {/* Image */}
-          <div className="relative">
+          <div className={`relative ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
             <div className="aspect-square bg-gradient-to-br from-blue-100 to-orange-100 rounded-2xl p-6 shadow-xl">
               <img 
                 src="https://images.pexels.com/photos/7654904/pexels-photo-7654904.jpeg?auto=compress&cs=tinysrgb&w=800"

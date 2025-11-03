@@ -1,7 +1,10 @@
 import React from 'react';
 import { ExternalLink, Instagram } from 'lucide-react';
+import { useInView } from '../hooks/useInView';
 
 const Portfolio = () => {
+  const [ref, isInView] = useInView();
+
   const projects = [
     {
       title: 'Cartões Premium',
@@ -36,10 +39,10 @@ const Portfolio = () => {
   ];
 
   return (
-    <section id="portfolio" className="py-20 bg-gray-50">
+    <section id="portfolio" className="py-20 bg-gray-50" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Nosso <span className="text-blue-700">Portfólio</span>
           </h2>
@@ -51,9 +54,10 @@ const Portfolio = () => {
         {/* Portfolio Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {projects.map((project, index) => (
-            <div 
+            <div
               key={index}
-              className="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className={`group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="aspect-square overflow-hidden">
                 <img 
@@ -83,7 +87,7 @@ const Portfolio = () => {
         </div>
 
         {/* Instagram CTA */}
-        <div className="text-center">
+        <div className={`text-center ${isInView ? 'animate-scale-in' : 'opacity-0'}`}>
           <a
             href="https://instagram.com/ideiaprint"
             target="_blank"
