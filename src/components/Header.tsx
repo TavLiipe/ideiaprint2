@@ -37,12 +37,14 @@ const Header = () => {
     isScrolled ? 'shadow-lg' : ''
   }`}
   style={{
-    backgroundImage: "url('https://exemplo.com/sua-imagem.png')", // 👉 coloque aqui o link da sua imagem
-    backgroundSize: 'cover', // cobre toda a área do menu
-    backgroundRepeat: 'no-repeat',
+    backgroundImage: "url('https://SEU-LINK-DA-IMAGEM-AQUI.png')", // 🔗 coloque aqui a URL da sua imagem
+    backgroundSize: 'cover', // cobre toda a largura
+    backgroundRepeat: 'no-repeat', // evita repetir
     backgroundPosition: 'center', // centraliza a imagem
   }}
 >
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-between h-20"> {/* aumentei um pouco a altura */}
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <img 
