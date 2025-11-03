@@ -11,14 +11,14 @@ const Services = () => {
       features: ['Papel couchê', 'Verniz UV', 'Corte especial', 'Laminação']
     },
     {
-      image: 'https://i.ibb.co/9mL640Qq/TESTE.png',
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: Image,
       title: 'Banners e Placas',
       description: 'Impressão em lona, PVC e outros materiais para comunicação visual.',
       features: ['Lona vinílica', 'PVC expandido', 'Impressão UV', 'Placas de ACM']
     },
     {
-      image: 'https://i.ibb.co/1Ghk1jPn/FAIXA.png',
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: Sticker,
       title: 'Adesivos',
       description: 'Adesivos personalizados para veículos, vitrines e decoração.',
@@ -32,14 +32,14 @@ const Services = () => {
       features: ['Madeira', 'Acrílico', 'Metal', 'Vidro', 'Cerâmica']
     },
     {
-      image: 'https://i.ibb.co/9mL640Qq/TESTE.png',
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: Scissors,
       title: 'Corte a Laser',
       description: 'Cortes precisos em acrílico, MDF e outros materiais.',
       features: ['Alta precisão', 'Acabamento perfeito', 'MDF', 'Acrílico', 'Gravação']
     },
     {
-      image: 'https://i.ibb.co/1Ghk1jPn/FAIXA.png',
+      image: 'https://i.ibb.co/S4LMfbXn/1-MOCKUP.png',
       icon: Palette,
       title: 'Design Gráfico',
       description: 'Criação de layouts e identidade visual para sua empresa.',
