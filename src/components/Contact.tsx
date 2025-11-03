@@ -105,7 +105,7 @@ const Contact = () => {
             {/* Map */}
             <div className="rounded-xl overflow-hidden h-64 border border-gray-800">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.834160255074!2d-46.65657198447691!3d-23.57721796849852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8e25e89f1%3A0x9c315a2bfb8bbdc3!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1699020412301!5m2!1spt-BR!2sbr"
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.1865227328803!2d-47.91686712477558!3d-15.794115922948404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3a845a59d6e9%3A0x67abe56578b94138!2sID%C3%89IA%20PRINT!5e0!3m2!1sen!2sbr!4v1762185527646!5m2!1sen!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
