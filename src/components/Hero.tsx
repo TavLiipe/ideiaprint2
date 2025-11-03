@@ -63,7 +63,7 @@ const Hero = () => {
             <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-orange-500/20 rounded-2xl p-8 shadow-2xl border border-white/10">
               <div className="w-full h-full bg-white/10 rounded-xl shadow-lg flex items-center justify-center overflow-hidden backdrop-blur-sm border border-white/20">
                 <img
-                  src="https://i.ibb.co/hF9n01tm/Imagem-do-Whats-App-de-2025-10-29-s-13-53-02-1fa88869.jpg"
+                  src="https://i.ibb.co/S4LMfbXn/1-MOCKUP.png"
                   alt="Materiais gráficos da Ideia Print"
                   className="w-full h-full object-cover rounded-lg"
                 />
