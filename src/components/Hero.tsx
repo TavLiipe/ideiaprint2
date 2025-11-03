@@ -9,7 +9,7 @@ const Hero = () => {
   style={{
     backgroundImage: 'url("https://i.ibb.co/VpvyKFzZ/TESTE.png")',
     widht: '1920px',
-    height: '1060px', // altura fixa para corresponder à arte
+    height: '1040px', // altura fixa para corresponder à arte
   }}
 >
   <div className="absolute inset-0 bg-black/60"></div>
