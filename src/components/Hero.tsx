@@ -18,25 +18,6 @@ const Hero = () => {
           <div className="space-y-8">
             <div className="space-y-4">
             </div>
-
-            {/* Features */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Entrega Rápida</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Alta Qualidade</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Preços Competitivos</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-gray-100">Atendimento Personalizado</span>
-              </div>
             </div>
 
             {/* CTA Button */}
