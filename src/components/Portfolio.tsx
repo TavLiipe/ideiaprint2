@@ -10,8 +10,8 @@ const Portfolio = () => {
     },
     {
       title: 'Banner Corporativo',
-      category: 'https://i.ibb.co/MYbbwrs/Imagem-do-Whats-App-de-2025-10-22-s-15-14-05-fb435faa.jpg',
-      image: ''
+      category: '',
+      image: 'https://i.ibb.co/MYbbwrs/Imagem-do-Whats-App-de-2025-10-22-s-15-14-05-fb435faa.jpg'
     },
     {
       title: 'Adesivos Personalizados',
