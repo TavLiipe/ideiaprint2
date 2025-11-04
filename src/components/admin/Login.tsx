@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogIn, Eye, EyeOff, AlertCircle, User, Lock, UserPlus } from 'lucide-react';
+import { LogIn, Eye, EyeOff, AlertCircle, User, Lock } from 'lucide-react';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,23 +9,17 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showCreateAdmin, setShowCreateAdmin] = useState(false);
-  const [createAdminLoading, setCreateAdminLoading] = useState(false);
-  const [createAdminSuccess, setCreateAdminSuccess] = useState('');
-  const [newAdminUsername, setNewAdminUsername] = useState('admin');
-  const [newAdminPassword, setNewAdminPassword] = useState('admin123');
-  const [newAdminFullName, setNewAdminFullName] = useState('Administrador');
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already logged in
+  // Redireciona se já estiver logado
   useEffect(() => {
     if (user) {
       navigate('/admin/dashboard', { replace: true });
     }
   }, [user, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -39,79 +33,27 @@ const Login = () => {
     setLoading(false);
   };
 
-  const handleCreateAdmin = async () => {
-    setError('');
-    setCreateAdminSuccess('');
-    setCreateAdminLoading(true);
-
-    if (!newAdminUsername.trim() || !newAdminPassword.trim() || !newAdminFullName.trim()) {
-      setError('Todos os campos são obrigatórios');
-      setCreateAdminLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-admin`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-          },
-          body: JSON.stringify({
-            username: newAdminUsername,
-            full_name: newAdminFullName,
-            email: `${newAdminUsername}@internal.local`,
-            password: newAdminPassword
-          })
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setCreateAdminSuccess(`Usuário criado com sucesso! Username: ${data.username}`);
-        setShowCreateAdmin(false);
-        setNewAdminUsername('admin');
-        setNewAdminPassword('admin123');
-        setNewAdminFullName('Administrador');
-      } else {
-        setError(data.error || 'Erro ao criar usuário');
-      }
-    } catch (err) {
-      setError('Erro ao conectar com o servidor');
-    } finally {
-      setCreateAdminLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Effects */}
+      {/* Efeitos de fundo */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23007BFF%22 fill-opacity=%220.05%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-      
-      {/* Floating Elements */}
       <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div className="absolute top-40 right-20 w-72 h-72 bg-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div className="absolute -bottom-8 left-40 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
 
       <div className="max-w-md w-full relative z-10">
-        {/* Login Card */}
+        {/* Card de Login */}
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-blue-100 p-8 relative overflow-hidden">
-          {/* Card Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-orange-500/5 rounded-3xl"></div>
           
-          {/* Header */}
+          {/* Cabeçalho */}
           <div className="text-center mb-8 relative z-10">
             <div className="flex items-center justify-center mb-6">
-              <div>
-                <img 
-                  src="https://cdn.discordapp.com/attachments/980003561863782420/1416863885071356035/26e1a8eb-5222-4737-953d-ab4f9c0f85cf.png?ex=68c864d2&is=68c71352&hm=798d6ec3d77c257ed103625156cde870e0662baec1ff7c78a9bd3b8faa8a42e5&" 
-                  alt="Ideia Print Logo"
-                  className="w-24 h-24 object-contain rounded-2xl shadow-lg"
-                />
-              </div>
+              <img 
+                src="https://cdn.discordapp.com/attachments/980003561863782420/1416863885071356035/26e1a8eb-5222-4737-953d-ab4f9c0f85cf.png" 
+                alt="Ideia Print Logo"
+                className="w-24 h-24 object-contain rounded-2xl shadow-lg"
+              />
             </div>
             
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -122,19 +64,12 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Form */}
+          {/* Formulário */}
           <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
             {error && (
               <div className="flex items-center space-x-3 p-4 bg-red-50 border border-red-200 rounded-xl">
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                 <span className="text-red-700 text-sm">{error}</span>
-              </div>
-            )}
-
-            {createAdminSuccess && (
-              <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-xl">
-                <AlertCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-green-700 text-sm">{createAdminSuccess}</span>
               </div>
             )}
 
@@ -159,7 +94,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Senha
@@ -188,7 +122,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}
@@ -205,9 +138,10 @@ const Login = () => {
                   <span>Entrar no Painel</span>
                 </div>
               )}
-            </button> 
+            </button>
+          </form>
 
-          {/* Footer */}
+          {/* Rodapé */}
           <div className="mt-8 text-center relative z-10">
             <p className="text-gray-500 text-sm">
               Acesso restrito aos funcionários da Ideia Print
@@ -219,7 +153,7 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Bottom Text */}
+        {/* Texto inferior */}
         <div className="text-center mt-6">
           <p className="text-gray-400 text-sm">
             © 2024 Ideia Print. Todos os direitos reservados.
@@ -227,7 +161,6 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Custom Styles */}
       <style jsx>{`
         @keyframes blob {
           0% {
