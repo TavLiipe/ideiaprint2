@@ -206,7 +206,78 @@ const Login = () => {
                 </div>
               )}
             </button>
+
+              <div className="space-y-3">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <p className="text-sm text-blue-900 font-semibold mb-3">Criar usuário administrador</p>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Nome Completo
+                      </label>
+                      <input
+                        type="text"
+                        value={newAdminFullName}
+                        onChange={(e) => setNewAdminFullName(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Administrador"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Nome de Usuário
+                      </label>
+                      <input
+                        type="text"
+                        value={newAdminUsername}
+                        onChange={(e) => setNewAdminUsername(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: admin"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-blue-900 font-medium mb-1">
+                        Senha
+                      </label>
+                      <input
+                        type="password"
+                        value={newAdminPassword}
+                        onChange={(e) => setNewAdminPassword(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Digite a senha"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-2 mt-4">
+                    <button
+                      type="button"
+                      onClick={handleCreateAdmin}
+                      disabled={createAdminLoading}
+                      className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+                    >
+                      {createAdminLoading ? 'Criando...' : 'Criar Usuário'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCreateAdmin(false);
+                        setNewAdminUsername('admin');
+                        setNewAdminPassword('admin123');
+                        setNewAdminFullName('Administrador');
+                      }}
+                      disabled={createAdminLoading}
+                      className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium rounded-lg transition-all"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
               </div>
+            )}
           </form>
 
           {/* Footer */}
