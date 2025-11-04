@@ -206,10 +206,7 @@ const Login = () => {
                 </div>
               )}
             </button>
-                  </div>
-                </div>
               </div>
-            )}
           </form>
 
           {/* Footer */}
