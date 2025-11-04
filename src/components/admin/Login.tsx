@@ -206,8 +206,6 @@ const Login = () => {
                 </div>
               )}
             </button> 
-            }
-          </form>
 
           {/* Footer */}
           <div className="mt-8 text-center relative z-10">
