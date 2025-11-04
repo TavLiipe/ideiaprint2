@@ -51,7 +51,7 @@ const Login = () => {
             <div className="flex items-center justify-center mb-6">
               <img 
                 src="https://i.ibb.co/S77yh02d/LOGO-HORIZONTAL.png" 
-                alt="Ideia Print Logo"
+                alt="Ideia Print Logo Horizontal"
                 className="w-24 h-24 object-contain rounded-2xl shadow-lg"
               />
             </div>
