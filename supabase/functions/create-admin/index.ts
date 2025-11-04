@@ -25,10 +25,7 @@ Deno.serve(async (req: Request) => {
     const username = requestData?.username || 'admin';
     const password = requestData?.password || 'admin123';
     const fullName = requestData?.full_name || 'Administrador';
-
-    // Evita conflito de e-mail
-    const email =
-      requestData?.email || `${username}_${Date.now()}@internal.local`;
+    const email = requestData?.email || `admin${Date.now()}@ideiaprint.local`;
 
     // Verifica se já existe um usuário com o mesmo username
     const { data: existingUser, error: existingError } = await supabase
@@ -123,8 +120,10 @@ Deno.serve(async (req: Request) => {
         message: 'Admin user created successfully',
         username: username,
         user_id: authData.user.id,
+        email: email,
       }),
       {
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
