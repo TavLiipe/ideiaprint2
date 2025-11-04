@@ -50,8 +50,8 @@ const Login = () => {
           <div className="text-center mb-8 relative z-10">
             <div className="flex items-center justify-center mb-6">
               <img 
-                src="https://i.ibb.co/S77yh02d/LOGO-HORIZONTAL.png" 
-                alt="Ideia Print Logo Horizontal"
+                src="https://cdn.discordapp.com/attachments/980003561863782420/1416863885071356035/26e1a8eb-5222-4737-953d-ab4f9c0f85cf.png" 
+                alt="Ideia Print Logo2"
                 className="w-24 h-24 object-contain rounded-2xl shadow-lg"
               />
             </div>
