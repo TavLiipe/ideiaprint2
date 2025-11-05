@@ -180,47 +180,34 @@ const Settings: React.FC = () => {
       }
     } else {
       try {
-        const { data: hashResult, error: hashError } = await supabase.rpc('hash_password', {
-          p_password: userData.password
-        });
-
-        if (hashError || !hashResult) {
-          alert('Erro ao gerar hash da senha');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          alert('Erro: Sessão não encontrada');
           return;
         }
 
-        const email = `${userData.username}@internal.local`;
-
-        const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-          email: email,
-          password: userData.password,
-          email_confirm: true,
-          user_metadata: {
-            username: userData.username,
-            full_name: userData.full_name,
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              username: userData.username,
+              full_name: userData.full_name,
+              password: userData.password,
+              role: userData.role,
+              is_active: true,
+            }),
           }
-        });
+        );
 
-        if (authError || !authData.user) {
-          alert(`Erro ao criar usuário no sistema de autenticação: ${authError?.message || 'Erro desconhecido'}`);
-          return;
-        }
+        const result = await response.json();
 
-        const { error: insertError } = await supabase
-          .from('user_roles')
-          .insert([{
-            user_id: authData.user.id,
-            username: userData.username,
-            full_name: userData.full_name,
-            role: userData.role,
-            password_hash: hashResult,
-            created_by: userRole?.user_id,
-            is_active: true,
-          }]);
-
-        if (insertError) {
-          await supabase.auth.admin.deleteUser(authData.user.id);
-          alert(`Erro ao salvar dados do usuário: ${insertError.message}`);
+        if (!response.ok) {
+          alert(`Erro ao criar usuário: ${result.error}`);
           return;
         }
 
