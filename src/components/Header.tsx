@@ -21,7 +21,7 @@ const Header = () => {
     { label: 'Serviços', href: '#servicos', icon: <BriefcaseIcon className="w-5 h-5 mr-2" /> },
     { label: 'Portfólio', href: '#portfolio', icon: <FolderIcon className="w-5 h-5 mr-2" /> },
     { label: 'Sobre Nós', href: '#sobre', icon: <UserIcon className="w-5 h-5 mr-2" /> },
-    { label: 'Contato', href: '#contato', icon: <PhoneIconclassName="w-5 h-5 mr-2" /> },
+    { label: 'Contato', href: '#contato', icon: <PhoneIcon className="w-5 h-5 mr-2" /> },
   ];
 
   const scrollToSection = (href) => {
