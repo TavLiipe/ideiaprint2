@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PhoneIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { HomeIcon, BriefcaseIcon, FolderIcon, UserIcon, EnvelopeIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, BriefcaseIcon, Phone, FolderIcon, UserIcon, EnvelopeIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
