@@ -26,15 +26,20 @@ const Contact = () => {
   };
 
   return (
-    <section id="contato" className="py-20 relative" ref={ref}>
+    <section id="contato" className="py-20 relative overflow-hidden" ref={ref}>
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <div className="inline-block mb-4">
+            <span className="text-orange-400 text-sm font-semibold tracking-wider uppercase">Fale conosco</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Entre em <span className="text-orange-400">Contato</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Estamos prontos para atender você! Entre em contato e solicite seu orçamento.
           </p>
         </div>
@@ -48,8 +53,8 @@ const Contact = () => {
               </h3>
               
               <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -62,8 +67,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                     <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -75,8 +80,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -89,8 +94,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center">
+                <div className="flex items-start space-x-4 bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -106,7 +111,7 @@ const Contact = () => {
             </div>
 
             {/* Map */}
-              <div className="rounded-xl overflow-hidden h-64 border border-white/20">
+              <div className="rounded-2xl overflow-hidden h-64 border-2 border-white/20 shadow-xl">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.1865227328803!2d-47.91686712477558!3d-15.794115922948404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3a845a59d6e9%3A0x67abe56578b94138!2sID%C3%89IA%20PRINT!5e0!3m2!1sen!2sbr!4v1762185527646!5m2!1sen!2sbr"
                   width="100%"
@@ -121,7 +126,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className={`bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 shadow-lg border border-white/20 ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
+          <div className={`bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 shadow-2xl border-2 border-white/20 ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
             <h3 className="text-2xl font-bold text-white mb-6">
               Solicite seu Orçamento
             </h3>
@@ -216,7 +221,7 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
+                className="w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/50"
               >
                 <Send className="w-5 h-5 mr-2" />
                 Enviar via WhatsApp

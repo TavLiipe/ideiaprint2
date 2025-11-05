@@ -45,14 +45,19 @@ const Services = () => {
   ];
 
   return (
-    <section id="servicos" className="py-20 relative" ref={ref}>
+    <section id="servicos" className="py-20 relative overflow-hidden" ref={ref}>
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent"></div>
+      <div className="absolute top-1/4 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-white mb-4">Nossos Serviços</h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Oferecemos soluções completas em comunicação visual e impressão digital 
+          <div className="inline-block mb-4">
+            <span className="text-orange-400 text-sm font-semibold tracking-wider uppercase">O que fazemos</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Nossos Serviços</h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Oferecemos soluções completas em comunicação visual e impressão digital
             com tecnologia de ponta e acabamento profissional.
           </p>
         </div>
@@ -62,7 +67,7 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 flex flex-col items-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+              className={`group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-white/20 hover:border-orange-500/50 flex flex-col items-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Imagem clicável */}
@@ -80,20 +85,20 @@ const Services = () => {
               )}
 
               {/* Título */}
-              <h3 className="text-2xl font-bold text-white mb-4 text-center group-hover:text-orange-400 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-white mb-3 text-center group-hover:text-orange-400 transition-colors duration-300">
                 {service.title}
               </h3>
 
               {/* Descrição */}
-              <p className="text-gray-300 mb-6 leading-relaxed text-center">
+              <p className="text-gray-400 mb-6 leading-relaxed text-center text-sm">
                 {service.description}
               </p>
 
               {/* Features */}
-              <ul className="space-y-2 text-center">
+              <ul className="space-y-2 w-full">
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="text-sm text-gray-400 flex items-center justify-center">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+                  <li key={featureIndex} className="text-xs text-gray-400 flex items-center bg-white/5 rounded-lg px-3 py-2">
+                    <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2 flex-shrink-0"></div>
                     {feature}
                   </li>
                 ))}
