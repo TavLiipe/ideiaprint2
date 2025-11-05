@@ -154,15 +154,16 @@ const Settings: React.FC = () => {
       };
 
       if (userData.password) {
-        const { data: authData, error: authError } = await supabase.auth.admin.updateUserById(
-          editingItem.user_id,
-          { password: userData.password }
-        );
+        const { data: hashResult, error: hashError } = await supabase.rpc('hash_password', {
+          p_password: userData.password
+        });
 
-        if (authError) {
-          alert('Erro ao atualizar senha');
+        if (hashError || !hashResult) {
+          alert('Erro ao gerar hash da senha');
           return;
         }
+
+        updateData.password_hash = hashResult;
       }
 
       const { error } = await supabase
@@ -174,32 +175,60 @@ const Settings: React.FC = () => {
         fetchUsers();
         setShowUserModal(false);
         setEditingItem(null);
+      } else {
+        alert(`Erro ao atualizar usuário: ${error.message}`);
       }
     } else {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: `${userData.username}@internal.local`,
-        password: userData.password,
-      });
+      try {
+        const { data: hashResult, error: hashError } = await supabase.rpc('hash_password', {
+          p_password: userData.password
+        });
 
-      if (authError || !authData.user) {
-        alert('Erro ao criar usuário');
-        return;
-      }
+        if (hashError || !hashResult) {
+          alert('Erro ao gerar hash da senha');
+          return;
+        }
 
-      const { error } = await supabase
-        .from('user_roles')
-        .insert([{
-          user_id: authData.user.id,
-          username: userData.username,
-          full_name: userData.full_name,
-          role: userData.role,
-          password_hash: '',
-          created_by: userRole?.user_id,
-        }]);
+        const email = `${userData.username}@internal.local`;
 
-      if (!error) {
+        const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+          email: email,
+          password: userData.password,
+          email_confirm: true,
+          user_metadata: {
+            username: userData.username,
+            full_name: userData.full_name,
+          }
+        });
+
+        if (authError || !authData.user) {
+          alert(`Erro ao criar usuário no sistema de autenticação: ${authError?.message || 'Erro desconhecido'}`);
+          return;
+        }
+
+        const { error: insertError } = await supabase
+          .from('user_roles')
+          .insert([{
+            user_id: authData.user.id,
+            username: userData.username,
+            full_name: userData.full_name,
+            role: userData.role,
+            password_hash: hashResult,
+            created_by: userRole?.user_id,
+            is_active: true,
+          }]);
+
+        if (insertError) {
+          await supabase.auth.admin.deleteUser(authData.user.id);
+          alert(`Erro ao salvar dados do usuário: ${insertError.message}`);
+          return;
+        }
+
         fetchUsers();
         setShowUserModal(false);
+        alert('Usuário criado com sucesso!');
+      } catch (error: any) {
+        alert(`Erro ao criar usuário: ${error.message}`);
       }
     }
   };
