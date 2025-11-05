@@ -39,14 +39,15 @@ const Portfolio = () => {
   ];
 
   return (
-    <section id="portfolio" className="py-20 bg-gray-50" ref={ref}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="portfolio" className="py-20 relative" ref={ref}>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Nosso <span className="text-blue-700">Portfólio</span>
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Nosso <span className="text-orange-400">Portfólio</span>
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Confira alguns dos nossos trabalhos realizados com excelência e criatividade.
           </p>
         </div>
@@ -56,7 +57,7 @@ const Portfolio = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              className={`group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+              className={`group relative bg-gradient-to-br from-white/15 to-white/5 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="aspect-square overflow-hidden">

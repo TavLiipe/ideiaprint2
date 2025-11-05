@@ -5,7 +5,12 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer
+      className="text-white relative"
+      style={{
+        background: 'linear-gradient(135deg, rgba(1, 16, 31, 0.95) 0%, rgba(0, 8, 18, 0.95) 100%)'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

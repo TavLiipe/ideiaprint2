@@ -19,7 +19,12 @@ import Dashboard from './components/admin/Dashboard';
 
 // Public landing page
 const LandingPage = () => (
-  <div className="min-h-screen bg-white">
+  <div
+    className="min-h-screen text-white"
+    style={{
+      background: 'linear-gradient(135deg, rgb(1, 16, 31) 0%, rgb(0, 8, 18) 100%)'
+    }}
+  >
     <Header />
     <Hero />
     <Services />

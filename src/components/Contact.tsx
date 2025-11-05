@@ -26,14 +26,15 @@ const Contact = () => {
   };
 
   return (
-    <section id="contato" className="py-20 bg-gray-50" ref={ref}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contato" className="py-20 relative" ref={ref}>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Entre em <span className="text-orange-500">Contato</span>
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Entre em <span className="text-orange-400">Contato</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Estamos prontos para atender você! Entre em contato e solicite seu orçamento.
           </p>
         </div>
@@ -42,7 +43,7 @@ const Contact = () => {
           {/* Contact Info */}
           <div className={`space-y-8 ${isInView ? 'animate-fade-in-left' : 'opacity-0'}`}>
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              <h3 className="text-2xl font-bold text-white mb-6">
                 Informações de Contato
               </h3>
               
@@ -52,8 +53,8 @@ const Contact = () => {
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Endereço</h4>
-                    <p className="text-gray-600">
+                    <h4 className="font-semibold text-white mb-1">Endereço</h4>
+                    <p className="text-gray-300">
                       Rua das Impressões, 123<br />
                       Centro - São Paulo - SP<br />
                       CEP: 01234-567
@@ -66,22 +67,22 @@ const Contact = () => {
                     <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Telefones</h4>
-                    <p className="text-gray-600">
-                      <a href="tel:+551134567890" className="hover:text-blue-600 transition-colors">(11) 3456-7890</a><br />
-                      <a href="https://wa.me/5511999999999" className="hover:text-orange-500 transition-colors">(11) 99999-9999 WhatsApp</a>
+                    <h4 className="font-semibold text-white mb-1">Telefones</h4>
+                    <p className="text-gray-300">
+                      <a href="tel:+551134567890" className="hover:text-blue-400 transition-colors">(11) 3456-7890</a><br />
+                      <a href="https://wa.me/5511999999999" className="hover:text-orange-400 transition-colors">(11) 99999-9999 WhatsApp</a>
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">E-mail</h4>
-                    <p className="text-gray-600">
-                      <a href="mailto:contato@ideiaprint.com.br" className="hover:text-green-600 transition-colors">
+                    <h4 className="font-semibold text-white mb-1">E-mail</h4>
+                    <p className="text-gray-300">
+                      <a href="mailto:contato@ideiaprint.com.br" className="hover:text-green-400 transition-colors">
                         contato@ideiaprint.com.br
                       </a>
                     </p>
@@ -89,12 +90,12 @@ const Contact = () => {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Horário de Atendimento</h4>
-                    <p className="text-gray-600">
+                    <h4 className="font-semibold text-white mb-1">Horário de Atendimento</h4>
+                    <p className="text-gray-300">
                       Segunda a Sexta: 8h às 18h<br />
                       Sábado: 8h às 12h<br />
                       WhatsApp 24h
@@ -105,7 +106,7 @@ const Contact = () => {
             </div>
 
             {/* Map */}
-              <div className="rounded-xl overflow-hidden h-64 border border-gray-800">
+              <div className="rounded-xl overflow-hidden h-64 border border-white/20">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.1865227328803!2d-47.91686712477558!3d-15.794115922948404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3a845a59d6e9%3A0x67abe56578b94138!2sID%C3%89IA%20PRINT!5e0!3m2!1sen!2sbr!4v1762185527646!5m2!1sen!2sbr"
                   width="100%"
@@ -120,15 +121,15 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className={`bg-white rounded-2xl p-8 shadow-lg ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className={`bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 shadow-lg border border-white/20 ${isInView ? 'animate-fade-in-right' : 'opacity-0'}`}>
+            <h3 className="text-2xl font-bold text-white mb-6">
               Solicite seu Orçamento
             </h3>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                     Nome *
                   </label>
                   <input
@@ -138,11 +139,12 @@ const Contact = () => {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors placeholder-gray-400"
+                    placeholder="Seu nome"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                     E-mail *
                   </label>
                   <input
@@ -152,14 +154,15 @@ const Contact = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors placeholder-gray-400"
+                    placeholder="seu@email.com"
                   />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
                     Telefone *
                   </label>
                   <input
@@ -169,11 +172,12 @@ const Contact = () => {
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors placeholder-gray-400"
+                    placeholder="(11) 99999-9999"
                   />
                 </div>
                 <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="service" className="block text-sm font-medium text-gray-300 mb-2">
                     Serviço
                   </label>
                   <select
@@ -181,22 +185,22 @@ const Contact = () => {
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                   >
-                    <option value="">Selecione um serviço</option>
-                    <option value="cartoes">Cartões de Visita</option>
-                    <option value="banners">Banners e Placas</option>
-                    <option value="adesivos">Adesivos</option>
-                    <option value="uv">Impressão UV</option>
-                    <option value="laser">Corte a Laser</option>
-                    <option value="design">Design Gráfico</option>
-                    <option value="outros">Outros</option>
+                    <option value="" className="bg-gray-900">Selecione um serviço</option>
+                    <option value="cartoes" className="bg-gray-900">Cartões de Visita</option>
+                    <option value="banners" className="bg-gray-900">Banners e Placas</option>
+                    <option value="adesivos" className="bg-gray-900">Adesivos</option>
+                    <option value="uv" className="bg-gray-900">Impressão UV</option>
+                    <option value="laser" className="bg-gray-900">Corte a Laser</option>
+                    <option value="design" className="bg-gray-900">Design Gráfico</option>
+                    <option value="outros" className="bg-gray-900">Outros</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
                   Mensagem
                 </label>
                 <textarea
@@ -206,7 +210,7 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Descreva seu projeto..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors placeholder-gray-400"
                 ></textarea>
               </div>
 

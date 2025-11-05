@@ -33,16 +33,16 @@ const Header = () => {
 
   return (
     <header
-  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-    isScrolled ? 'shadow-lg' : ''
-  }`}
-  style={{
-    backgroundImage: "url('https://i.ibb.co/1Ghk1jPn/FAIXA.png')", // 🔗 coloque aqui a URL da sua imagem
-    backgroundSize: 'cover', // cobre toda a largura
-    backgroundRepeat: 'no-repeat', // evita repetir
-    backgroundPosition: 'center', // centraliza a imagem
-  }}
->
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'shadow-lg' : ''
+      }`}
+      style={{
+        background: isScrolled
+          ? 'linear-gradient(135deg, rgba(1, 16, 31, 0.98) 0%, rgba(0, 8, 18, 0.98) 100%)'
+          : 'linear-gradient(135deg, rgba(1, 16, 31, 0.7) 0%, rgba(0, 8, 18, 0.7) 100%)',
+        backdropFilter: 'blur(10px)',
+      }}
+    >
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex items-center justify-between h-20"> {/* aumentei um pouco a altura */}
           {/* Logo */}

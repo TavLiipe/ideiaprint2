@@ -3,15 +3,16 @@ import { MessageCircle, ArrowRight } from 'lucide-react';
 
 const CallToAction = () => {
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-transparent"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center">
           <div className="mb-8">
             <MessageCircle className="w-16 h-16 text-orange-400 mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Precisa de impressão <span className="text-orange-400">rápida</span>?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               Fale com a Ideia Print agora mesmo! Nossa equipe está pronta para 
               atender seu projeto com agilidade e qualidade excepcional.
             </p>
@@ -37,7 +38,7 @@ const CallToAction = () => {
             </a>
           </div>
 
-          <div className="mt-8 text-blue-100">
+          <div className="mt-8 text-gray-300">
             <p className="text-sm">
               ⚡ Resposta em até 5 minutos • 📱 Atendimento 24/7 • 🚀 Entrega expressa
             </p>

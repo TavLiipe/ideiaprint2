@@ -45,12 +45,13 @@ const Services = () => {
   ];
 
   return (
-    <section id="servicos" className="py-20 bg-white" ref={ref}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="servicos" className="py-20 relative" ref={ref}>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Nossos Serviços</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold text-white mb-4">Nossos Serviços</h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Oferecemos soluções completas em comunicação visual e impressão digital 
             com tecnologia de ponta e acabamento profissional.
           </p>
@@ -61,37 +62,37 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
+              className={`group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 flex flex-col items-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Imagem clicável */}
               {service.image && (
-                <div 
+                <div
                   className="flex justify-center mb-4 w-full cursor-pointer"
                   onClick={() => setZoomedImage(service.image)}
                 >
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
+                  <img
+                    src={service.image}
+                    alt={service.title}
                     className="w-full h-48 object-contain rounded-lg transform transition-transform duration-300 hover:scale-105"
                   />
                 </div>
               )}
 
               {/* Título */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center group-hover:text-blue-700 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-white mb-4 text-center group-hover:text-orange-400 transition-colors duration-300">
                 {service.title}
               </h3>
 
               {/* Descrição */}
-              <p className="text-gray-600 mb-6 leading-relaxed text-center">
+              <p className="text-gray-300 mb-6 leading-relaxed text-center">
                 {service.description}
               </p>
 
               {/* Features */}
               <ul className="space-y-2 text-center">
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="text-sm text-gray-700 flex items-center justify-center">
+                  <li key={featureIndex} className="text-sm text-gray-400 flex items-center justify-center">
                     <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
                     {feature}
                   </li>
