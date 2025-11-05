@@ -61,10 +61,15 @@ const Header = () => {
               <button
                 key={item.label}
                 onClick={() => scrollToSection(item.href)}
-                className="flex items-center text-white hover:text-orange-400 font-medium transition-colors duration-200"
+                className="relative flex items-center text-white font-medium transition-all duration-200 group"
               >
                 {item.icon}
                 {item.label}
+          
+                {/* Barra neon laranja */}
+                <span
+                  className="absolute left-0 bottom-[-6px] w-0 h-[2px] bg-orange-500 rounded-full transition-all duration-300 group-hover:w-full group-hover:shadow-[0_0_10px_2px_rgba(255,165,0,0.8)]"
+                ></span>
               </button>
             ))}
           </nav>
