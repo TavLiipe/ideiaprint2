@@ -124,13 +124,6 @@ const OrderList: React.FC<OrderListProps> = ({ orders, onSelectOrder, onEditOrde
       {!hideHeader && (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pedidos</h1>
-          <button
-            onClick={onNewOrder}
-            className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Novo Pedido
-          </button>
         </div>
       )}
 
