@@ -11,7 +11,12 @@ import {
   Clock,
   ExternalLink,
   ChevronDown,
-  Search
+  Search,
+  Plus,
+  X,
+  Mail,
+  Phone,
+  MapPin
 } from 'lucide-react';
 
 interface Client {
@@ -45,6 +50,14 @@ const NewOrderPage: React.FC<NewOrderPageProps> = ({ onBack, onSave }) => {
   const [clientSearch, setClientSearch] = useState('');
   const [showServiceOrderConfirm, setShowServiceOrderConfirm] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [showNewClientModal, setShowNewClientModal] = useState(false);
+  const [newClientData, setNewClientData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    notes: ''
+  });
   const [formData, setFormData] = useState({
     service: '',
     description: '',
@@ -112,6 +125,46 @@ const NewOrderPage: React.FC<NewOrderPageProps> = ({ onBack, onSave }) => {
     (client.email && client.email.toLowerCase().includes(clientSearch.toLowerCase())) ||
     (client.phone && client.phone.includes(clientSearch))
   );
+
+  const handleCreateClient = async () => {
+    if (!newClientData.name) {
+      alert('Nome é obrigatório');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('clients')
+        .insert([{
+          name: newClientData.name,
+          email: newClientData.email || null,
+          phone: newClientData.phone || null,
+          address: newClientData.address || null,
+          notes: newClientData.notes || null,
+          is_active: true,
+          created_by: user?.id
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      await fetchClients();
+      setSelectedClient(data);
+      setClientSearch(data.name);
+      setShowNewClientModal(false);
+      setNewClientData({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        notes: ''
+      });
+    } catch (error: any) {
+      console.error('Error creating client:', error);
+      alert(`Erro ao criar cliente: ${error.message}`);
+    }
+  };
 
   const handleServiceOrderYes = async () => {
     if (createdOrderId) {
@@ -252,9 +305,19 @@ const NewOrderPage: React.FC<NewOrderPageProps> = ({ onBack, onSave }) => {
               <User className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1 relative">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Selecione o Cliente
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Selecione o Cliente
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowNewClientModal(true)}
+                  className="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Novo Cliente
+                </button>
+              </div>
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -455,6 +518,150 @@ const NewOrderPage: React.FC<NewOrderPageProps> = ({ onBack, onSave }) => {
           </div>
         )}
       </form>
+
+      {/* Modal Novo Cliente */}
+      {showNewClientModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Novo Cliente</h2>
+              <button
+                onClick={() => {
+                  setShowNewClientModal(false);
+                  setNewClientData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    notes: ''
+                  });
+                }}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                <p className="text-sm text-blue-700 dark:text-blue-400">
+                  Preencha os dados do novo cliente. Apenas o nome é obrigatório.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Nome Completo *
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      required
+                      value={newClientData.name}
+                      onChange={(e) => setNewClientData(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                      placeholder="Nome do cliente"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="email"
+                        value={newClientData.email}
+                        onChange={(e) => setNewClientData(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="email@exemplo.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      Telefone
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="tel"
+                        value={newClientData.phone}
+                        onChange={(e) => setNewClientData(prev => ({ ...prev, phone: e.target.value }))}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="(11) 99999-9999"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Endereço
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-4 text-gray-400 w-5 h-5" />
+                    <textarea
+                      rows={3}
+                      value={newClientData.address}
+                      onChange={(e) => setNewClientData(prev => ({ ...prev, address: e.target.value }))}
+                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                      placeholder="Endereço completo"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Observações
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={newClientData.notes}
+                    onChange={(e) => setNewClientData(prev => ({ ...prev, notes: e.target.value }))}
+                    className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                    placeholder="Informações adicionais sobre o cliente..."
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowNewClientModal(false);
+                    setNewClientData({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      address: '',
+                      notes: ''
+                    });
+                  }}
+                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCreateClient}
+                  disabled={!newClientData.name}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-xl transition-all duration-200 font-semibold flex items-center shadow-lg disabled:cursor-not-allowed"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Criar Cliente
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
